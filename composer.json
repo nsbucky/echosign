@@ -1,0 +1,27 @@
+{
+    "name": "nsbucky/echosign",
+    "type": "library",
+    "description": "Library for Adobe Echosign REST APIT",
+    "keywords": ["echosign","adobe","REST"],
+    "homepage": "https://github.com/nsbucky/echosign",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Kenrick Buchanan",
+            "email": "nsbucky@gmail.com",
+            "homepage": "http://thebusypixel.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "guzzlehttp/guzzle": "~4.0"
+    },
+    "require-dev": {
+        "mockery/mockery": "dev-master@dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "Echosign\\": "src/"
+        }
+    }
+}
