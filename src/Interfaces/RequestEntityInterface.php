@@ -17,14 +17,29 @@ interface RequestEntityInterface {
      */
     public function getEndPoint();
 
+    /**
+     * @param TransportInterface $transport
+     */
     public function setTransport(TransportInterface $transport);
 
+    /**
+     * @return TransportInterface
+     */
     public function getTransport();
 
+    /**
+     * @return string
+     */
     public function getAccessToken();
 
+    /**
+     * @return array
+     */
     public function getHeaders();
 
+    /**
+     * @return mixed
+     */
     public function getBody();
 
 }
