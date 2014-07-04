@@ -92,7 +92,7 @@ class TransientDocument implements RequestEntityInterface {
 
         // create new response
         $this->transientDocument = new TransientDocuments( $response['transientDocumentId'] );
-        return true;
+        return $this->transientDocument;
     }
 
     /**
@@ -123,7 +123,7 @@ class TransientDocument implements RequestEntityInterface {
         }
 
         return [
-            'Access-Token' => $this->token->getToken(),
+            'Access-Token' => $this->token->getAccessToken(),
             'File-Name'    => $this->fileName,
             'Mime-Type'    => $this->mimeType,
             'File'         => fopen($this->filePath, 'r')

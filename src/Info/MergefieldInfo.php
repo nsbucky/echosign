@@ -12,10 +12,10 @@ class MergefieldInfo implements  InfoInterface {
      */
     public function toArray()
     {
-        return [
+        return array_filter([
             'defaultValue' => $this->defaultValue,
             'fieldName'    => $this->fieldName,
-        ];
+        ]);
     }
 
     /**

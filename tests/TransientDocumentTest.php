@@ -11,7 +11,7 @@ class TransientDocumentTest extends PHPUnit_Framework_TestCase {
     {
         $this->config = require_once __DIR__. '/../echosign-auth.php';
         $this->token = m::mock('Echosign\Token');
-        $this->token->shouldReceive('getToken')->andReturn('12345abc');
+        $this->token->shouldReceive('getAccessToken')->andReturn('12345abc');
     }
 
     public function testConstruct()
@@ -39,7 +39,7 @@ class TransientDocumentTest extends PHPUnit_Framework_TestCase {
 
         $doc->setTransport($request);
 
-        $this->assertTrue($doc->send());
+        $this->assertInstanceOf('Echosign\Responses\TransientDocuments',$doc->send());
 
         $this->assertEquals('12345abc', $doc->getDocumentId());
     }

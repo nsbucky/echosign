@@ -5,6 +5,7 @@ use Echosign\Info\DocumentCreationInfo;
 use Echosign\Interfaces\RequestEntityInterface;
 use Echosign\Interfaces\TransportInterface;
 use Echosign\Options\InteractiveOptions;
+use Echosign\Responses\AgreementCreationResponse;
 
 class Agreement implements RequestEntityInterface {
 
@@ -34,27 +35,50 @@ class Agreement implements RequestEntityInterface {
 
     /**
      * @param Token $token
+     * @param $agreementId
      */
-    public function __construct(Token $token)
+    public function __construct(Token $token, $agreementId=null)
     {
         $this->token = $token;
+
+        if( null !== $agreementId ) {
+            $this->agreementId = $agreementId;
+        }
     }
 
+    /**
+     * @param DocumentCreationInfo $documentCreationInfo
+     * @param InteractiveOptions $interactiveOptions
+     * @param null $userId
+     * @param null $userEmail
+     * @return AgreementCreationResponse|Error
+     */
     public function create( DocumentCreationInfo $documentCreationInfo, InteractiveOptions $interactiveOptions = null, $userId=null, $userEmail=null )
     {
-        $this->headers = [
+        $this->headers = array_filter([
             'Accept'       => 'application/json',
             'Access-Token' => $this->token->getAccessToken(),
             'X-User-Id'    => $userId,
             'X-User-Email' => $userEmail
-        ];
+        ]);
 
-        // set the agreementId;
-        $this->data['AgreementCreationInfo'] = new AgreementCreationInfo( $documentCreationInfo, $interactiveOptions );
+        // set this data to be called by transport
+        $this->data = new AgreementCreationInfo( $documentCreationInfo, $interactiveOptions );
+
+        $request  = $this->getTransport();
+        $response = $request->post($this);
+
+        if( $response instanceof Error ) {
+            return $response;
+        }
+
+        $this->agreementId = $response['agreementId'];
+        return new AgreementCreationResponse( $response );
     }
 
     public function get($agreementId)
     {
+        // load an agreement
         $this->endPoint .= '/'.$agreementId;
         $this->agreementId = $agreementId;
     }
@@ -87,6 +111,11 @@ class Agreement implements RequestEntityInterface {
     public function status()
     {
         $this->endPoint .= '/'.$this->agreementId . '/status';
+    }
+
+    public function cancel()
+    {
+        return $this->status();
     }
 
     /**

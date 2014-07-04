@@ -2,6 +2,7 @@
 
 use Echosign\Interfaces\InfoInterface;
 use Echosign\Options\SecurityOption;
+use Echosign\TransientDocument;
 
 class DocumentCreationInfo implements InfoInterface {
 
@@ -30,6 +31,111 @@ class DocumentCreationInfo implements InfoInterface {
     protected $vaultingInfo;
     protected $mergeFieldInfo = [ ];
     protected $fileInfos = [ ];
+
+    /**
+     * @param $transientDocumentId
+     * @param $name
+     * @param $signatureType
+     * @param $signerEmail
+     */
+    public function __construct($transientDocumentId = null, $name=null, $signatureType=null, $signerEmail=null )
+    {
+        if( $transientDocumentId instanceof TransientDocument ) {
+            $this->addTransientDocument( $transientDocumentId );
+        }
+
+        if( is_scalar( $transientDocumentId ) ) {
+            $info = new FileInfo;
+            $info->transientDocumentId = $transientDocumentId;
+        }
+
+        if( null !== $name ) {
+            $this->setAgreementName($name);
+        }
+
+        if( null !== $signatureType ) {
+            $this->setSignatureType($signatureType);
+        }
+
+        if( null !== $signerEmail ) {
+            $this->addRecipient($signerEmail, null, 'SIGNER');
+        }
+    }
+
+    /**
+     * @param $name
+     * @return $this
+     */
+    public function setAgreementName($name)
+    {
+        $this->name = filter_var($name, FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW);
+        return $this;
+    }
+
+    /**
+     * proxy see @setAgreementName
+     * @param $name
+     * @return $this
+     */
+    public function setName($name)
+    {
+        return $this->setAgreementName($name);
+    }
+
+    /**
+     * @param $message
+     * @return $this
+     */
+    public function setMessage($message)
+    {
+        $this->message = $message;
+        return $this;
+    }
+
+    /**
+     * for example en_US or fr_FR
+     * @param $locale
+     * @return $this
+     */
+    public function setLocale($locale)
+    {
+        // for example en_US or fr_FR
+        $this->locale = $locale;
+        return $this;
+    }
+
+    /**
+     * @param integer $numDays
+     * @return $this
+     */
+    public function setDeadline($numDays)
+    {
+        $this->daysUntilSigningDeadline = (int) $numDays;
+        return $this;
+    }
+
+    /**
+     * @param $url
+     * @return $this
+     */
+    public function setCallBackInfo($url)
+    {
+        $this->callbackinfo = filter_var($url, FILTER_SANITIZE_URL);
+        return $this;
+    }
+
+    /**
+     * @param $type
+     * @return $this
+     */
+    public function setSignatureType($type)
+    {
+        if( in_array($type, ['ESIGN','WRITTEN'])) {
+            $this->signatureType = $type;
+        }
+
+        return $this;
+    }
 
     /**
      * @param FileInfo $info
@@ -65,6 +171,19 @@ class DocumentCreationInfo implements InfoInterface {
     }
 
     /**
+     * @param null $email
+     * @param null $fax
+     * @param null $role
+     * @return $this
+     */
+    public function addRecipient( $email=null, $fax=null, $role=null )
+    {
+        $info = new RecipientInfo( $email, $fax, $role);
+        $this->recipients[] = $info;
+        return $this;
+    }
+
+    /**
      * @param $email
      * @return $this
      */
@@ -94,6 +213,19 @@ class DocumentCreationInfo implements InfoInterface {
     {
         $this->fileInfos[] = $info;
 
+        return $this;
+    }
+
+    /**
+     * set this transient document as the one to be signed
+     * @param TransientDocument $document
+     * @return $this
+     */
+    public function addTransientDocument( TransientDocument $document )
+    {
+        $info = new FileInfo();
+        $info->transientDocumentId = $document->getDocumentId();
+        $this->fileInfos[] = $info;
         return $this;
     }
 
@@ -150,6 +282,7 @@ class DocumentCreationInfo implements InfoInterface {
             $data['vaultingInfo'] = $this->vaultingInfo->toArray();
         }
 
+        return $data;
     }
 
     /**

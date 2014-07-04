@@ -7,19 +7,34 @@ class FileInfo implements InfoInterface {
     public $libraryDocumentId;
     public $transientDocumentId;
     public $libraryDocumentName;
-    public $documentURL;
+
+    /**
+     * @var URLFileInfo
+     */
+    protected $documentURL;
+
+    public function setDocumentURL($name, $url, $mimeType=null)
+    {
+        $this->documentURL = new URLFileInfo($name, $url, $mimeType);
+    }
 
     /**
      * @return array
      */
     public function toArray()
     {
-        return [
+        $documentURL = null;
+
+        if( isset( $this->documentURL ) ) {
+            $documentURL = $this->documentURL->toArray();
+        }
+
+        return array_filter([
             'libraryDocumentId'   => $this->libraryDocumentId,
             'transientDocumentId' => $this->transientDocumentId,
             'libraryDocumentName' => $this->libraryDocumentName,
-            'documentURL'         => $this->documentURL
-        ];
+            'documentURL'         => $documentURL
+        ]);
     }
 
     /**

@@ -21,10 +21,10 @@ class DisplayUserInfo implements InfoInterface {
      */
     public function toArray()
     {
-        return [
+        return array_filter([
             'company'         => $this->company,
             'fullNameOrEmail' => $this->fullNameOrEmail,
-        ];
+        ]);
     }
 
     /**

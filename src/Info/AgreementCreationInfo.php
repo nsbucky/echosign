@@ -8,7 +8,7 @@ class AgreementCreationInfo implements InfoInterface {
     protected $documentCreationInfo;
     protected $interactiveOptions;
 
-    public function __construct( DocumentCreationInfo $documentCreationInfo, InteractiveOptions $interactiveOptions )
+    public function __construct( DocumentCreationInfo $documentCreationInfo, InteractiveOptions $interactiveOptions = null )
     {
         $this->documentCreationInfo = $documentCreationInfo;
         $this->interactiveOptions   = $interactiveOptions;
@@ -19,10 +19,10 @@ class AgreementCreationInfo implements InfoInterface {
      */
     public function toArray()
     {
-        return [
+        return array_filter([
             'documentCreationInfo' => $this->documentCreationInfo->toArray(),
-            'interactiveOptions'   => $this->interactiveOptions->toArray(),
-        ];
+            'options'              => $this->interactiveOptions->toArray(),
+        ]);
     }
 
     /**

@@ -4,20 +4,27 @@ use Echosign\Interfaces\InfoInterface;
 
 class URLFileInfo implements InfoInterface {
 
-    public $name;
-    public $url;
-    public $mimeType;
+    protected  $name;
+    protected  $url;
+    protected  $mimeType;
+
+    public function __construct( $name, $url, $mimeType=null)
+    {
+        $this->name = $name;
+        $this->url  = filter_var($url, FILTER_SANITIZE_URL);
+        $this->mimeType = $mimeType;
+    }
 
     /**
      * @return array
      */
     public function toArray()
     {
-        return [
+        return array_filter([
             'name'     => $this->name,
             'url'      => $this->url,
             'mimeType' => $this->mimeType
-        ];
+        ]);
     }
 
     /**
