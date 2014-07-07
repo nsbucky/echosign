@@ -23,7 +23,7 @@ class UserAgreement {
         $this->displayDate      = \DateTime::createFromFormat( \DateTime::W3C, $response['displayDate'] );
         $this->status           = new UserDocumentStatus( $response['status'] );
         $this->name             = $response['name'];
-        $this->displayUserInfo  = new DisplayUserInfo( $response['displayUserInfo'] );
+        $this->displayUserInfo  = new DisplayUserInfo( \Echosign\array_get( $response['displayUserInfo'], 'company'), \Echosign\array_get($response['displayUserInfo'], 'fullNameOrEmail') );
         $this->agreementId      = $response['agreementId'];
         $this->esign            = (bool) $response['esign'];
         $this->lastestVersionId = $response['latestVersionId'];

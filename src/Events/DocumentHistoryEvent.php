@@ -32,7 +32,7 @@ class DocumentHistoryEvent {
         }
 
         if( array_key_exists('deviceLocation', $config) ) {
-            $this->deviceLocation = new DeviceLocation( $config['deviceLocation'] );
+            $this->deviceLocation = new DeviceLocation( $config['deviceLocation']['latitude'], $config['deviceLocation']['longitude'] );
         }
 
         if( array_key_exists('type', $config )) {

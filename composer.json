@@ -22,6 +22,7 @@
     "autoload": {
         "psr-4": {
             "Echosign\\": "src/"
-        }
+        },
+        "files": ["src/functions.php"]
     }
 }

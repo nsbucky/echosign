@@ -1,51 +1,49 @@
 <?php namespace Echosign;
 
+use Echosign\Info\UserCreationInfo;
 use Echosign\Interfaces\RequestEntityInterface;
 use Echosign\Interfaces\TransportInterface;
-use \Echosign\Credentials\Reminder as ReminderCredentials;
-use Echosign\Responses\ReminderCreationResult;
+use Echosign\Responses\UsersInfo;
 use Echosign\Transports\Guzzle;
 
-class Reminder implements RequestEntityInterface {
+class User implements RequestEntityInterface {
 
-    const END_POINT = '/reminders';
+    const END_POINT = '/users';
 
-    /**
-     * @var Token
-     */
     protected $token;
 
     /**
-     * @var Credentials\Reminder
+     * @var UserCreationInfo
      */
-    protected $reminderCredentials;
+    protected $userCreationInfo;
+
+    protected $data = [];
+    protected $headers = [];
 
     /**
      * @var TransportInterface
      */
     protected $transport;
 
-    protected $headers = [];
-
     /**
      * @param Token $token
-     * @param $agreementId
-     * @param null $comment
      */
-    public function __construct( Token $token, $agreementId, $comment=null )
+    public function __construct( Token $token)
     {
         $this->token = $token;
-        $this->reminderCredentials = new ReminderCredentials($agreementId, $comment);
     }
 
     /**
-     * @return ReminderCreationResult
+     * @param UserCreationInfo $info
+     * @return bool
      */
-    public function create()
+    public function create( UserCreationInfo $info )
     {
         $this->headers = [
             'Access-Token' => $this->token->getAccessToken(),
         ];
+
+        $this->data = $info->toArray();
 
         $request  = $this->getTransport();
         $response = $request->post($this);
@@ -54,15 +52,28 @@ class Reminder implements RequestEntityInterface {
             return $response;
         }
 
-        return new ReminderCreationResult( $response );
+        return true;
     }
 
     /**
-     * @return ReminderCredentials
+     * @return UsersInfo
      */
-    public function getCredentials()
+    public function get()
     {
-        return $this->reminderCredentials;
+        $this->headers = [
+            'Access-Token' => $this->token->getAccessToken(),
+        ];
+
+        $this->data = [];
+
+        $request  = $this->getTransport();
+        $response = $request->get($this);
+
+        if( $response instanceof Error ) {
+            return $response;
+        }
+
+        return new UsersInfo( $response );
     }
 
     /**
@@ -70,7 +81,7 @@ class Reminder implements RequestEntityInterface {
      */
     public function toArray()
     {
-        return $this->reminderCredentials->toArray();
+        return $this->data;
     }
 
     /**

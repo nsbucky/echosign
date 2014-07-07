@@ -7,14 +7,12 @@ class DisplayUserInfo implements InfoInterface {
     public $company;
     public $fullNameOrEmail;
 
-    public function __construct( array $config )
+    public function __construct( $company, $fullNameOrEmail )
     {
-        foreach( $config as $key => $value ) {
-            if( property_exists( $this, $key )) {
-                $this->$key = $value;
-            }
-        }
+        $this->company         = $company;
+        $this->fullNameOrEmail = $fullNameOrEmail;
     }
+
 
     /**
      * @return array

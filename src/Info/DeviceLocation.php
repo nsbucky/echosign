@@ -1,12 +1,13 @@
 <?php namespace Echosign\Info;
 
 class DeviceLocation {
+
     protected  $longitude, $latitude;
 
-    public function __construct( array $config )
+    public function __construct( $latitude, $longitude )
     {
-        if( isset($config['latitude']) ) $this->latitude = $config['latitude'];
-        if( isset($config['longitude']) ) $this->latitude = $config['longitude'];
+        $this->latitude  = $latitude;
+        $this->longitude = $longitude;
     }
 
     public function getLatitude()
