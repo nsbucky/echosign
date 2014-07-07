@@ -1,26 +1,37 @@
 <?php namespace Echosign\Status;
 
 class UserDocumentStatus {
-    public $EXPIRED;
-    public $SIGNED;
-    public $WAITINGFOR_MY_APPROVAL;
-    public $OUT_FOR_SIGNATURE;
-    public $ARCHIVED;
-    public $APPROVED;
-    public $WAITING_FOR_MY_SIGNATURE;
-    public $WAITING_FOR_AUTHORING;
-    public $WIDGET;
-    public $OUT_FOR_APPROVAL;
-    public $RECALLED;
-    public $FORM;
-    public $WAITING_FOR_FAXIN;
+    
+    protected $status;    
+    
+    protected $statusMessages = [
+        'EXPIRED' => 'The document has expired',
+        'SIGNED' => 'The document has been completed',
+        'WAITING_FOR_MY_APPROVAL' => 'It is the current user\'s turn to approve the document',
+        'OUT_FOR_SIGNATURE' => 'It is another user\'s turn to sign the document',
+        'ARCHIVED' => 'The document has been archived in the user\'s account',
+        'APPROVED' => 'The document has been approved',
+        'WAITING_FOR_MY_SIGNATURE' => ' It is the current user\'s turn to sign the document,',
+        'WAITING_FOR_AUTHORING' => 'The document is waiting to be authored',
+        'WIDGET' => 'The document is a widget',
+        'OUT_FOR_APPROVAL' => 'It is another user\'s turn to approve the document,',
+        'RECALLED' => 'The document was recalled before completion',
+        'FORM' => 'The document is a form that can be used to create new documents',
+        'WAITING_FOR_FAXIN' => 'The current user needs to fax in the original document',
+    ];
 
-    public function __construct( array $config )
+    public function __construct( $status )
     {
-        foreach( $config as $key => $value ) {
-            if( property_exists( $this, $key )) {
-                $this->$key = $value;
-            }
-        }
+        $this->status = $status;
+    }
+    
+    public function getMessage()
+    {
+        return $this->statusMessages[ $this->status ];
+    }
+    
+    public function getStatus()
+    {
+        return $this->status;
     }
 }

@@ -127,6 +127,60 @@ class Agreement implements RequestEntityInterface {
         }
 
         return new AgreementInfo( $response );
+        /* smaple response
+        {
+  "events": [
+    {
+      "actingUserEmail": "kenrick@specificperformance.com",
+      "actingUserIpAddress": "98.176.93.174",
+      "date": "2014-07-04T07:17:50-07:00",
+      "description": "Document created by Kenrick Buchanan",
+      "participantEmail": "kenrick@specificperformance.com",
+      "type": "CREATED",
+      "versionId": "2AAABLblqZhCdrS_jN9CPseEm_i5suppmf-gZtC51kDY249ocj5e1dBwYEDJiP1ok0olHGOmcpsA*"
+    },
+    {
+      "actingUserEmail": "kenrick@specificperformance.com",
+      "date": "2014-07-04T07:17:51-07:00",
+      "description": "Sent out for signature to nsbucky@gmail.com",
+      "participantEmail": "nsbucky@gmail.com",
+      "type": "SIGNATURE_REQUESTED"
+    }
+  ],
+  "latestVersionId": "2AAABLblqZhDIxXlCh5Wt1rdQsVBRUcn6BZ__P8I7oCP97ywr7RDStz8eWMZyRg9woOR9Y2-r-Cs*",
+  "locale": "en_US",
+  "message": "please sign",
+  "name": "[DEMO USE ONLY] sample agreement",
+  "participants": [
+    {
+      "email": "nsbucky@gmail.com",
+      "name": "",
+      "roles": [
+        "SIGNER"
+      ],
+      "status": "WAITING_FOR_MY_SIGNATURE"
+    },
+    {
+      "company": "Specific Performance, LLC",
+      "email": "kenrick@specificperformance.com",
+      "name": "Kenrick Buchanan",
+      "roles": [
+        "SENDER"
+      ],
+      "status": "OUT_FOR_SIGNATURE",
+      "title": "IT"
+    }
+  ],
+  "status": "OUT_FOR_SIGNATURE",
+  "agreementId": "2AAABLblqZhBXIFwsI6hzV5IzticsCNYH2wZFgfEdo8mhhpOMZR261g3d5tR9RHpg6ckTZFftG2o*",
+  "nextParticipantInfos": [
+    {
+      "email": "nsbucky@gmail.com",
+      "name": "",
+      "waitingSince": "2014-07-04T07:17:50-07:00"
+    }
+  ]
+}*/
     }
 
     public function documents()

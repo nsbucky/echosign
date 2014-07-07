@@ -1,6 +1,7 @@
 <?php namespace Echosign\Responses;
 
 use Echosign\Options\DocSecurityOption;
+use Echosign\Status\AgreementStatus;
 
 class AgreementInfo {
 
@@ -26,13 +27,11 @@ class AgreementInfo {
         $this->latestVersionId = $response['latestVersionId'];
 
         foreach( $response['securityOptions'] as $option ) {
-            $doc = new DocSecurityOption;
-            $doc->OPEN_PROTECTED = $option['OPEN_PROTECTED'];
-            $doc->OTHER = $option['OTHER'];
+            $doc = new DocSecurityOption($option);
             $this->securityOptions = $doc;
         }
 
-        $this->status =
+        $this->status = new AgreementStatus( $response['status'] );
     }
 
 }
