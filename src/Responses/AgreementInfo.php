@@ -111,6 +111,11 @@ class AgreementInfo {
         return $this->status;
     }
 
+    public function getId()
+    {
+        return $this->agreementId;
+    }
+
     /**
      * @param Agreement $agreement
      */

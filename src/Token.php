@@ -10,6 +10,8 @@ use Echosign\Interfaces\RequestEntityInterface;
 
 class Token implements RequestEntityInterface {
 
+    const END_POINT = '/auth/tokens';
+
     /**
      * @var User
      */
@@ -25,10 +27,6 @@ class Token implements RequestEntityInterface {
      */
     protected $accessToken;
 
-    /**
-     * @var string
-     */
-    protected $endPoint = '/auth/tokens';
 
     /**
      * @var Request
@@ -119,7 +117,7 @@ class Token implements RequestEntityInterface {
      */
     public function getEndPoint()
     {
-        return $this->endPoint;
+        return self::END_POINT;
     }
 
     /**
@@ -140,14 +138,16 @@ class Token implements RequestEntityInterface {
 
     /**
      * @param TransportInterface $transport
+     * @return $this;
      */
     public function setTransport( TransportInterface $transport )
     {
         $this->transport = $transport;
+        return $this;
     }
 
     /**
-     * @return Request
+     * @return TransportInterface
      */
     public function getTransport()
     {

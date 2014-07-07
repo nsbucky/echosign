@@ -8,7 +8,7 @@ use Echosign\Responses\Error;
 
 class TransientDocument implements RequestEntityInterface {
 
-    protected $endPoint = '/transientDocuments';
+    const END_POINT = '/transientDocuments';
 
     /**
      * @var TransportInterface
@@ -143,15 +143,17 @@ class TransientDocument implements RequestEntityInterface {
      */
     public function getEndPoint()
     {
-        return $this->getEndPoint();
+        return self::END_POINT;
     }
 
     /**
      * @param TransportInterface $transport
+     * @return $this
      */
     public function setTransport( TransportInterface $transport )
     {
         $this->transport = $transport;
+        return $this;
     }
 
     /**

@@ -364,10 +364,12 @@ class Agreement implements RequestEntityInterface {
 
     /**
      * @param TransportInterface $transport
+     * @return $this
      */
     public function setTransport( TransportInterface $transport )
     {
         $this->transport = $transport;
+        return $this;
     }
 
     /**
