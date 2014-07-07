@@ -6,15 +6,21 @@ use Echosign\Interfaces\RequestEntityInterface;
 use Echosign\Interfaces\TransportInterface;
 use Echosign\Options\InteractiveOptions;
 use Echosign\Responses\AgreementCreationResponse;
+use Echosign\Responses\AgreementDocuments;
 use Echosign\Responses\AgreementInfo;
+use Echosign\Responses\AgreementStatusUpdateResponse;
+use Echosign\Responses\SigningUrls;
 use Echosign\Responses\UserAgreements;
+use Echosign\Info\AgreementStatusUpdateInfo;
 
 class Agreement implements RequestEntityInterface {
+
+    const END_POINT = '/agreements';
 
     /**
      * @var string
      */
-    protected $endPoint = '/agreements';
+    protected $endPoint = '';
 
     /**
      * @var TransportInterface
@@ -31,21 +37,14 @@ class Agreement implements RequestEntityInterface {
      */
     protected $headers = [];
 
-    protected $agreementId;
-
     protected $data = [];
 
     /**
      * @param Token $token
-     * @param $agreementId
      */
-    public function __construct(Token $token, $agreementId=null)
+    public function __construct(Token $token)
     {
         $this->token = $token;
-
-        if( null !== $agreementId ) {
-            $this->agreementId = $agreementId;
-        }
     }
 
     /**
@@ -101,21 +100,18 @@ class Agreement implements RequestEntityInterface {
             return $response;
         }
 
-        return new UserAgreements( $response );
+        return new UserAgreements( $response, $this );
     }
 
     /**
      * @param null $agreementId
-     * @return AgreementInfo
+     * @return AgreementInfo|Error
      */
-    public function get($agreementId=null)
+    public function get($agreementId)
     {
-        if( null !== $agreementId ) {
-            $this->agreementId = $agreementId;
-        }
-
         $this->headers = [
             'Access-Token' => $this->token->getAccessToken(),
+            'agreementId'  => $agreementId,
         ];
 
         $this->data = [];
@@ -126,96 +122,220 @@ class Agreement implements RequestEntityInterface {
             return $response;
         }
 
-        return new AgreementInfo( $response );
-        /* smaple response
-        {
-  "events": [
-    {
-      "actingUserEmail": "kenrick@specificperformance.com",
-      "actingUserIpAddress": "98.176.93.174",
-      "date": "2014-07-04T07:17:50-07:00",
-      "description": "Document created by Kenrick Buchanan",
-      "participantEmail": "kenrick@specificperformance.com",
-      "type": "CREATED",
-      "versionId": "2AAABLblqZhCdrS_jN9CPseEm_i5suppmf-gZtC51kDY249ocj5e1dBwYEDJiP1ok0olHGOmcpsA*"
-    },
-    {
-      "actingUserEmail": "kenrick@specificperformance.com",
-      "date": "2014-07-04T07:17:51-07:00",
-      "description": "Sent out for signature to nsbucky@gmail.com",
-      "participantEmail": "nsbucky@gmail.com",
-      "type": "SIGNATURE_REQUESTED"
-    }
-  ],
-  "latestVersionId": "2AAABLblqZhDIxXlCh5Wt1rdQsVBRUcn6BZ__P8I7oCP97ywr7RDStz8eWMZyRg9woOR9Y2-r-Cs*",
-  "locale": "en_US",
-  "message": "please sign",
-  "name": "[DEMO USE ONLY] sample agreement",
-  "participants": [
-    {
-      "email": "nsbucky@gmail.com",
-      "name": "",
-      "roles": [
-        "SIGNER"
-      ],
-      "status": "WAITING_FOR_MY_SIGNATURE"
-    },
-    {
-      "company": "Specific Performance, LLC",
-      "email": "kenrick@specificperformance.com",
-      "name": "Kenrick Buchanan",
-      "roles": [
-        "SENDER"
-      ],
-      "status": "OUT_FOR_SIGNATURE",
-      "title": "IT"
-    }
-  ],
-  "status": "OUT_FOR_SIGNATURE",
-  "agreementId": "2AAABLblqZhBXIFwsI6hzV5IzticsCNYH2wZFgfEdo8mhhpOMZR261g3d5tR9RHpg6ckTZFftG2o*",
-  "nextParticipantInfos": [
-    {
-      "email": "nsbucky@gmail.com",
-      "name": "",
-      "waitingSince": "2014-07-04T07:17:50-07:00"
-    }
-  ]
-}*/
+        return new AgreementInfo( $response, $this );
     }
 
-    public function documents()
+    /**
+     * @param $agreementId
+     * @param null $versionId
+     * @param null $participantEmail
+     * @param null $supportingDocumentContentFormat
+     * @return Error|AgreementDocuments
+     */
+    public function documents($agreementId, $versionId=null, $participantEmail=null, $supportingDocumentContentFormat=null)
     {
-        $this->endPoint .= '/'.$this->agreementId .'/documents';
+        $query = array_filter([
+            'versionId'=> $versionId,
+            'participantEmail'=>$participantEmail,
+            'supportingDocumentContentFormat'=>$supportingDocumentContentFormat
+        ]);
+
+        $this->endPoint = $agreementId .'/documents?'.http_build_query($query) ;
+
+        $this->headers = [
+            'Access-Token' => $this->token->getAccessToken(),
+            'agreementId'  => $agreementId,
+        ];
+
+        $this->data = [];
+        $request  = $this->getTransport();
+        $response = $request->get($this);
+
+        if( $response instanceof Error ) {
+            return $response;
+        }
+
+        return new AgreementDocuments( $response, $this, $agreementId );
     }
 
-    public function document($documentId)
+    /**
+     * @param $agreementId
+     * @param $documentId
+     * @throws \RuntimeException when savePath is not writeable
+     * @return boolean|string path to saved file
+     */
+    public function document($agreementId, $documentId)
     {
-        $this->endPoint .= '/'.$this->agreementId .'/documents/'.$documentId;
+        $this->endPoint = $agreementId .'/documents/'.$documentId;
+
+        $savePath = sys_get_temp_dir();
+
+        if( ! is_writable( $savePath ) ) {
+            throw new \RuntimeException("$savePath is not writeable by server.");
+        }
+
+        $fileName = $savePath . DIRECTORY_SEPARATOR . substr( $documentId, 0, 16);
+
+        $this->headers = [
+            'Access-Token' => $this->token->getAccessToken(),
+            'agreementId'  => $agreementId,
+            'documentId'   => $documentId,
+            'save_to'      => $fileName,
+        ];
+
+        $this->data = [];
+        $request  = $this->getTransport();
+        $response = $request->get($this);
+
+        if( $response instanceof Error ) {
+            return $response;
+        }
+
+        if( ! is_readable( $fileName ) ) {
+            return false;
+        }
+
+        return $fileName;
     }
 
-    public function auditTrail()
+    /**
+     * @param $agreementId
+     * @return bool|string
+     * @throws \RuntimeException
+     */
+    public function auditTrail($agreementId)
     {
-        $this->endPoint .= '/'.$this->agreementId . '/auditTrail';
+        $this->endPoint = $agreementId . '/auditTrail';
+
+        $savePath = sys_get_temp_dir();
+
+        if( ! is_writable( $savePath ) ) {
+            throw new \RuntimeException("$savePath is not writeable by server.");
+        }
+
+        $fileName = $savePath . DIRECTORY_SEPARATOR . substr( $agreementId, 0, 16). '.pdf';
+
+        $this->headers = [
+            'Access-Token' => $this->token->getAccessToken(),
+            'agreementId'  => $agreementId,
+            'save_to'      => $fileName,
+        ];
+
+        $this->data = [];
+        $request  = $this->getTransport();
+        $response = $request->get($this);
+
+        if( $response instanceof Error ) {
+            return $response;
+        }
+
+        if( ! is_readable( $fileName ) ) {
+            return false;
+        }
+
+        return $fileName;
     }
 
-    public function signingUrls()
+    /**
+     * @param $agreementId
+     * @return SigningUrls
+     */
+    public function signingUrls($agreementId)
     {
-        $this->endPoint .= '/'.$this->agreementId . '/signingUrls';
+        $this->endPoint = $agreementId . '/signingUrls';
+
+        $this->headers = [
+            'Access-Token' => $this->token->getAccessToken(),
+            'agreementId'  => $agreementId,
+        ];
+
+        $this->data = [];
+        $request  = $this->getTransport();
+        $response = $request->get($this);
+
+        if( $response instanceof Error ) {
+            return $response;
+        }
+
+        return new SigningUrls( $response );
     }
 
-    public function combinedDocument()
+    public function combinedDocument($agreementId, $versionId=null, $participantEmail=null, $attachSupportingDocuments=false, $auditReport=false)
     {
-        $this->endPoint .= '/'.$this->agreementId . '/combinedDocument';
+        $query = [
+            'versionId'                 => $versionId,
+            'participantEmail'          => $participantEmail,
+            'attachSupportingDocuments' => $attachSupportingDocuments,
+            'auditReport'               => $auditReport,
+        ];
+
+        $this->endPoint = $agreementId .'/combinedDocument?'.http_build_query($query) ;
+
+        $savePath = sys_get_temp_dir();
+
+        if( ! is_writable( $savePath ) ) {
+            throw new \RuntimeException("$savePath is not writeable by server.");
+        }
+
+        $fileName = $savePath . DIRECTORY_SEPARATOR . substr( $agreementId, 0, 16). '.pdf';
+
+        $this->headers = [
+            'Access-Token' => $this->token->getAccessToken(),
+            'agreementId'  => $agreementId,
+            'save_to'      => $fileName,
+        ];
+
+        $this->data = [];
+        $request  = $this->getTransport();
+        $response = $request->get($this);
+
+        if( $response instanceof Error ) {
+            return $response;
+        }
+
+        if( ! is_readable( $fileName ) ) {
+            return false;
+        }
+
+        return $fileName;
     }
 
-    public function status()
+    /**
+     * @param $agreementId
+     * @param AgreementStatusUpdateInfo $info
+     * @return AgreementStatusUpdateResponse
+     */
+    public function status( $agreementId, AgreementStatusUpdateInfo $info )
     {
-        $this->endPoint .= '/'.$this->agreementId . '/status';
+        $this->endPoint = $agreementId . '/status';
+
+        $this->headers = [
+            'Access-Token' => $this->token->getAccessToken(),
+            'agreementId'  => $agreementId,
+        ];
+
+        $this->data = $info->toArray();
+
+        $request  = $this->getTransport();
+        $response = $request->put($this);
+
+        if( $response instanceof Error ) {
+            return $response;
+        }
+
+        return new AgreementStatusUpdateResponse( $response );
     }
 
-    public function cancel()
+    /**
+     * @param $agreementId
+     * @param null $comment
+     * @param bool $notifySigner
+     * @return AgreementStatusUpdateResponse
+     */
+    public function cancel( $agreementId, $comment=null, $notifySigner=false )
     {
-        return $this->status();
+        $info = new AgreementStatusUpdateInfo( $comment, $notifySigner );
+        return $this->status( $agreementId, $info );
     }
 
     /**
@@ -239,7 +359,7 @@ class Agreement implements RequestEntityInterface {
      */
     public function getEndPoint()
     {
-        return $this->endPoint;
+        return self::END_POINT . '/' .$this->endPoint;
     }
 
     /**

@@ -1,5 +1,6 @@
 <?php namespace Echosign\Agreements;
 
+use Echosign\Agreement;
 use Echosign\Info\DisplayUserInfo;
 use Echosign\Status\UserDocumentStatus;
 
@@ -11,36 +12,75 @@ class UserAgreement {
     public $agreementId;
     public $esign;
     public $lastestVersionId;
+    protected $agreement;
 
-    public function __construct( array $agreement )
+    /**
+     * @param array $response
+     * @param Agreement $agreement
+     */
+    public function __construct( array $response, Agreement $agreement )
     {
-        $this->displayDate = $agreement['displayDate'];
-        $this->setStatus( new UserDocumentStatus( $agreement['status']) );
-        $this->name = $agreement['name'];
-        $this->setUserInfo( new DisplayUserInfo( $agreement['displayUserInfo'] ) );
-        $this->agreementId = $agreement['agreementId'];
-        $this->esign = $agreement['esign'];
-        $this->lastestVersionId = $agreement['latestVersionId'];
+        $this->displayDate      = \DateTime::createFromFormat( \DateTime::W3C, $response['displayDate'] );
+        $this->status           = new UserDocumentStatus( $response['status'] );
+        $this->name             = $response['name'];
+        $this->displayUserInfo  = new DisplayUserInfo( $response['displayUserInfo'] );
+        $this->agreementId      = $response['agreementId'];
+        $this->esign            = (bool) $response['esign'];
+        $this->lastestVersionId = $response['latestVersionId'];
+        $this->agreement        = $agreement;
     }
 
-    public function setStatus( UserDocumentStatus $status)
-    {
-        $this->status = $status;
-    }
-
+    /**
+     * @return string
+     */
     public function getStatus()
+    {
+        return $this->status->getStatus();
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatusMessage()
+    {
+        return $this->status->getMessage();
+    }
+
+    /**
+     * @return UserDocumentStatus
+     */
+    public function getUserDocumentStatus()
     {
         return $this->status;
     }
 
-    public function setUserInfo( DisplayUserInfo $info )
-    {
-        $this->displayUserInfo = $info;
-    }
-
-    public function getUserInfo()
+    /**
+     * @return DisplayUserInfo
+     */
+    public function getDisplayUserInfo()
     {
         return $this->displayUserInfo;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserName()
+    {
+        return $this->displayUserInfo->fullNameOrEmail;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCompany()
+    {
+        return $this->displayUserInfo->company;
+    }
+
+    public function getAgreementInfo()
+    {
+        return $this->agreement->get();
     }
 
 }
