@@ -91,7 +91,7 @@ class TransientDocument implements RequestEntityInterface {
         }
 
         // create new response
-        $this->transientDocument = new TransientDocuments( $response['transientDocumentId'] );
+        $this->transientDocument = new TransientDocuments( $response );
         return $this->transientDocument;
     }
 

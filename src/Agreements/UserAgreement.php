@@ -1,4 +1,4 @@
-<?php namespace Echosign;
+<?php namespace Echosign\Agreements;
 
 use Echosign\Info\DisplayUserInfo;
 use Echosign\Status\UserDocumentStatus;
@@ -11,6 +11,17 @@ class UserAgreement {
     public $agreementId;
     public $esign;
     public $lastestVersionId;
+
+    public function __construct( array $agreement )
+    {
+        $this->displayDate = $agreement['displayDate'];
+        $this->setStatus( new UserDocumentStatus( $agreement['status']) );
+        $this->name = $agreement['name'];
+        $this->setUserInfo( new DisplayUserInfo( $agreement['displayUserInfo'] ) );
+        $this->agreementId = $agreement['agreementId'];
+        $this->esign = $agreement['esign'];
+        $this->lastestVersionId = $agreement['latestVersionId'];
+    }
 
     public function setStatus( UserDocumentStatus $status)
     {

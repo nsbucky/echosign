@@ -12,10 +12,10 @@ class AccessToken {
      */
     protected $expiresIn;
 
-    public function __construct($accessToken, $expiresIn)
-    {
-        $this->accessToken = $accessToken;
-        $this->expiresIn   = $expiresIn;
+    public function __construct(array $response)
+    {                
+        $this->accessToken = $response['accessToken'];
+        $this->expiresIn   = $response['expiresIn'];
     }
 
     /**

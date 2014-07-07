@@ -9,9 +9,9 @@ class TransientDocuments {
     /**
      * @param $transientDocumentId
      */
-    public function __construct( $transientDocumentId )
+    public function __construct( array $response )
     {
-        $this->transientDocumentId = $transientDocumentId;
+        $this->transientDocumentId = $response['transientDocumentId'];
     }
 
     /**

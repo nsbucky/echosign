@@ -6,6 +6,8 @@ use Echosign\Interfaces\RequestEntityInterface;
 use Echosign\Interfaces\TransportInterface;
 use Echosign\Options\InteractiveOptions;
 use Echosign\Responses\AgreementCreationResponse;
+use Echosign\Responses\AgreementInfo;
+use Echosign\Responses\UserAgreements;
 
 class Agreement implements RequestEntityInterface {
 
@@ -76,11 +78,55 @@ class Agreement implements RequestEntityInterface {
         return new AgreementCreationResponse( $response );
     }
 
-    public function get($agreementId)
+    /**
+     * get all user agreements
+     * @param null $userId
+     * @param null $userEmail
+     * @return UserAgreements
+     */
+    public function getAll( $userId=null, $userEmail=null  )
     {
         // load an agreement
-        $this->endPoint .= '/'.$agreementId;
-        $this->agreementId = $agreementId;
+        $this->headers = array_filter([
+            'Access-Token' => $this->token->getAccessToken(),
+            'X-User-Id'    => $userId,
+            'X-User-Email' => $userEmail
+        ]);
+
+        $this->data = [];
+        $request  = $this->getTransport();
+        $response = $request->get($this);
+
+        if( $response instanceof Error ) {
+            return $response;
+        }
+
+        return new UserAgreements( $response );
+    }
+
+    /**
+     * @param null $agreementId
+     * @return AgreementInfo
+     */
+    public function get($agreementId=null)
+    {
+        if( null !== $agreementId ) {
+            $this->agreementId = $agreementId;
+        }
+
+        $this->headers = [
+            'Access-Token' => $this->token->getAccessToken(),
+        ];
+
+        $this->data = [];
+        $request  = $this->getTransport();
+        $response = $request->get($this);
+
+        if( $response instanceof Error ) {
+            return $response;
+        }
+
+        return new AgreementInfo( $response );
     }
 
     public function documents()

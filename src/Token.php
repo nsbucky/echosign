@@ -96,7 +96,7 @@ class Token implements RequestEntityInterface {
             return $response;
         }
 
-        $this->accessToken = new AccessToken( $response['accessToken'], $response['expiresIn'] );
+        $this->accessToken = new AccessToken( $response );
         return true;
     }
 
