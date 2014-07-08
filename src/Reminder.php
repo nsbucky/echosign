@@ -5,6 +5,7 @@ use Echosign\Interfaces\TransportInterface;
 use \Echosign\Credentials\Reminder as ReminderCredentials;
 use Echosign\Responses\ReminderCreationResult;
 use Echosign\Transports\Guzzle;
+use Echosign\Responses\Error;
 
 class Reminder implements RequestEntityInterface {
 

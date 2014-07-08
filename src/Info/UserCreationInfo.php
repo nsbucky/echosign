@@ -5,7 +5,7 @@ use Echosign\Interfaces\InfoInterface;
 class UserCreationInfo implements InfoInterface {
 
     public $optin = 'NO';
-    public $groupId;
+    protected  $groupId;
     protected $lastName;
     public $title;
     public $phone;
@@ -20,13 +20,15 @@ class UserCreationInfo implements InfoInterface {
      * @param $lastName
      * @param $email
      * @param $password
+     * @param $groupId
      */
-    public function __construct( $firstName, $lastName, $email, $password )
+    public function __construct( $firstName, $lastName, $email, $password, $groupId )
     {
         $this->firstName = $firstName;
         $this->lastName  = $lastName;
         $this->email     = $email;
         $this->password  = $password;
+        $this->groupId   = $groupId;
     }
 
     /**
@@ -45,6 +47,15 @@ class UserCreationInfo implements InfoInterface {
 
         $this->email = filter_var( $email, FILTER_SANITIZE_EMAIL);
     }
+
+    /**
+     * @return string
+     */
+    public function getGroupId()
+    {
+        return $this->groupId;
+    }
+
 
     /**
      * @return mixed

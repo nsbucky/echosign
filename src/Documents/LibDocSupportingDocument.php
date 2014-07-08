@@ -1,23 +1,32 @@
 <?php namespace Echosign\Documents;
 
-use Echosign\Responses\AgreementDocuments;
+use Echosign\Responses\Documents;
 
-class SupportingDocument {
+class LibDocSupportingDocument {
 
     protected $displayLabel, $supportingDocumentId, $fieldName, $mimeType;
-    protected $agreementDoc;
+    protected $document;
 
     /**
      * @param array $config
-     * @param AgreementDocuments $agreementDocuments
+     * @param Documents $document
      */
-    public function __construct( array $config, AgreementDocuments $agreementDocuments )
+    public function __construct( array $config, Documents $document )
     {
-        foreach(['displayLabel', 'supportingDocumentId', 'fieldName', 'mimeType'] as $c) {
-            $this->$c = \Echosign\array_get( $config, $c );
+        foreach(['displayLabel', 'supportingDocumentId', 'mimeType'] as $c) {
+            $this->$c = \Echosign\array_get( $config, $c);
         }
 
-        $this->agreementDoc = $agreementDocuments;
+        $this->document = $document;
+
+        // there might a screw up with adobes docs. so this is why this is here.
+        if( array_key_exists('fieldName', $config)) {
+            $this->fieldName = $config['fieldName'];
+        }
+
+        if( array_key_exists('fieldname', $config)) {
+            $this->fieldName = $config['fieldname'];
+        }
     }
 
     /**
@@ -58,9 +67,9 @@ class SupportingDocument {
      */
     public function downloadDocument($savePath)
     {
-        $agreement = $this->agreementDoc->getAgreement();
+        $library = $this->document->getLibraryDocument();
 
-        $file = $agreement->document( $this->agreementDoc->getAgreementId(), $this->getId() );
+        $file = $library->document( $this->documents->getLibraryDocumentId(), $this->getId() );
 
         if( false === $file ) {
             return false;

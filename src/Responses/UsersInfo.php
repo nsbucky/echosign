@@ -14,7 +14,7 @@ class UsersInfo {
     }
 
     /**
-     * @return array
+     * @return array|UserInfo[]
      */
     public function getUserInfoList()
     {

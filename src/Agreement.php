@@ -12,6 +12,7 @@ use Echosign\Responses\AgreementStatusUpdateResponse;
 use Echosign\Responses\SigningUrls;
 use Echosign\Responses\UserAgreements;
 use Echosign\Info\AgreementStatusUpdateInfo;
+use Echosign\Responses\Error;
 
 class Agreement implements RequestEntityInterface {
 
@@ -377,7 +378,12 @@ class Agreement implements RequestEntityInterface {
      */
     public function getTransport()
     {
-        return $this->transport;
+        if( isset($this->transport) ) {
+            return $this->transport;
+        }
+
+        // create a default transport just in case.
+        $this->transport = new Guzzle();
     }
 
     /**

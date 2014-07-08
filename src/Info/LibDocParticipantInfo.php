@@ -1,9 +1,10 @@
 <?php namespace Echosign\Info;
 
-use Echosign\Options\ParticipantInfoSecurityOption;
-use Echosign\Roles\ParticipantRole;
+use Echosign\Options\LibDocParticipantInfoSecurityOption;
+use Echosign\Roles\LibDocParticipantRole;
+use Echosign\Status\UserLibDocumentStatus;
 
-class ParticipantInfo {
+class LibDocParticipantInfo {
 
     public $title, $email, $company, $name;
     protected $securityOptions = [];
@@ -22,25 +23,27 @@ class ParticipantInfo {
 
         if( array_key_exists('securityOptions', $config)) {
             foreach( $config['securityOptions'] as $o ) {
-                $this->securityOptions[] = new ParticipantInfoSecurityOption( $o );
+                $this->securityOptions[] = new LibDocParticipantInfoSecurityOption( $o );
             }
         }
 
         if( array_key_exists('roles', $config )) {
             foreach( $config['roles'] as $r ) {
-                $this->roles[] = new ParticipantRole( $r );
+                $this->roles[] = new LibDocParticipantRole( $r );
             }
         }
 
         if( array_key_exists('alternateParticipants', $config )) {
             foreach( $config['alternateParticipants'] as $p ) {
-                $this->alternateParticipants[] = new ParticipantInfo( $config['alternateParticipants'] );
+                $this->alternateParticipants[] = new LibDocParticipantInfo( $config['alternateParticipants'] );
             }
         }
+
+        $this->status = new UserLibDocumentStatus( $config['status'] );
     }
 
     /**
-     * @return array|ParticipantRole[]
+     * @return array|LibDocParticipantRole[]
      */
     public function getRoles()
     {
@@ -48,7 +51,7 @@ class ParticipantInfo {
     }
 
     /**
-     * @return array|ParticipantInfoSecurityOption[]
+     * @return array|LibDocParticipantInfoSecurityOption[]
      */
     public function getSecurityOptions()
     {
@@ -56,11 +59,20 @@ class ParticipantInfo {
     }
 
     /**
-     * @return array|ParticipantInfo[]
+     * @return array|LibDocParticipantInfo[]
      */
     public function getAlternateParticipants()
     {
         return $this->alternateParticipants;
     }
+
+    /**
+     * @return \Echosign\Status\UserLibDocumentStatus
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
 
 }
