@@ -9,15 +9,17 @@ class AgreementCreationResponse {
 
     public function __construct( array $response )
     {
-        foreach( $response as $key => $value ) {
-            if( property_exists( $this, $key )) {
-                $this->$key = $value;
-            }
+        foreach( ['agreementId','embeddedCode','url'] as $k  ) {
+            $this->$k = \Echosign\array_get($response, $k);
+        }
+
+        if( isset( $response['expiration'] ) ) {
+            $this->expiration = \DateTime::createFromFormat( \DateTime::W3C, $response['expiration'] );
         }
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getAgreementId()
     {
@@ -25,7 +27,7 @@ class AgreementCreationResponse {
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getEmbeddedCode()
     {
@@ -33,7 +35,7 @@ class AgreementCreationResponse {
     }
 
     /**
-     * @return mixed
+     * @return \DateTime
      */
     public function getExpiration()
     {
@@ -41,7 +43,7 @@ class AgreementCreationResponse {
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getUrl()
     {
