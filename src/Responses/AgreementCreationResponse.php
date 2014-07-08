@@ -16,9 +16,36 @@ class AgreementCreationResponse {
         }
     }
 
-    public function __get( $key )
+    /**
+     * @return mixed
+     */
+    public function getAgreementId()
     {
-        if( isset($this->$key) ) return $this->$key;
+        return $this->agreementId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmbeddedCode()
+    {
+        return $this->embeddedCode;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExpiration()
+    {
+        return $this->expiration;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUrl()
+    {
+        return $this->url;
     }
 
 }

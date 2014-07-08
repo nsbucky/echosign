@@ -34,9 +34,10 @@ class AgreementTest extends PHPUnit_Framework_TestCase {
 
         $response = $agreement->create($docInfo);
 
-        foreach( $return as $k => $v ) {
-            $this->assertEquals( $v, $response->$k);
-        }
+        $this->assertEquals($return['embeddedCode'], $response->getEmbeddedCode());
+        $this->assertEquals($return['expiration'], $response->getExpiration());
+        $this->assertEquals($return['agreementId'], $response->getAgreementId());
+        $this->assertEquals($return['url'], $response->getUrl());
     }
 
     public function testGetAll()

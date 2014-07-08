@@ -74,7 +74,6 @@ class Agreement implements RequestEntityInterface {
             return $response;
         }
 
-        $this->agreementId = $response['agreementId'];
         return new AgreementCreationResponse( $response );
     }
 
