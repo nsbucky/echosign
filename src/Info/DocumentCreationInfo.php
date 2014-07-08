@@ -6,11 +6,17 @@ use Echosign\TransientDocument;
 
 class DocumentCreationInfo implements InfoInterface {
 
+    const SIGN_ESIGN = 'ESIGN';
+    const SIGN_WRITTEN = 'WRITTEN';
+    const FLOW_NOT_REQUIRED = 'SENDER_SIGNATURE_NOT_REQUIRED';
+    const FLOW_SIGNS_LAST = 'SENDER_SIGNS_LAST';
+    const FLOW_SIGNS_FIRST = 'SENDER_SIGNS_FIRST';
+
     /**
      * ['ESIGN' or 'WRITTEN']:
      * @var string
      */
-    public $signatureType = 'ESIGN';
+    protected $signatureType = 'ESIGN';
     public $callbackinfo;
     public $daysUntilSigningDeadline;
     public $locale;
@@ -19,10 +25,10 @@ class DocumentCreationInfo implements InfoInterface {
      * SENDER_SIGNATURE_NOT_REQUIRED, SENDER_SIGNS_LAST, or SENDER_SIGNS_FIRST
      * @var string
      */
-    public $signatureFlow;
+    protected  $signatureFlow;
     public $message;
     public $reminderFrequency;
-    public $name;
+    protected $name;
 
     protected $formFieldLayerTemplates = [ ];
     protected $securityOptions;
@@ -35,10 +41,11 @@ class DocumentCreationInfo implements InfoInterface {
     /**
      * @param $transientDocumentId
      * @param $name
-     * @param $signatureType
      * @param $signerEmail
+     * @param $signatureType
+     * @param $signatureFlow
      */
-    public function __construct($transientDocumentId = null, $name=null, $signatureType=null, $signerEmail=null )
+    public function __construct( $transientDocumentId, $name, $signerEmail, $signatureType, $signatureFlow )
     {
         if( $transientDocumentId instanceof TransientDocument ) {
             $this->addTransientDocument( $transientDocumentId );
@@ -49,17 +56,13 @@ class DocumentCreationInfo implements InfoInterface {
             $info->transientDocumentId = $transientDocumentId;
         }
 
-        if( null !== $name ) {
-            $this->setAgreementName($name);
-        }
+        $this->setAgreementName($name);
 
-        if( null !== $signatureType ) {
-            $this->setSignatureType($signatureType);
-        }
+        $this->setSignatureType($signatureType);
 
-        if( null !== $signerEmail ) {
-            $this->addRecipient($signerEmail, null, 'SIGNER');
-        }
+        $this->addRecipient($signerEmail, null, 'SIGNER');
+
+        $this->setSignatureFlow($signatureFlow);
     }
 
     /**
@@ -136,6 +139,21 @@ class DocumentCreationInfo implements InfoInterface {
 
         return $this;
     }
+
+    /**
+     * @param string $signatureFlow
+     * @return $this
+     */
+    public function setSignatureFlow( $signatureFlow )
+    {
+        if( in_array($signatureFlow, ['SENDER_SIGNATURE_NOT_REQUIRED', 'SENDER_SIGNS_LAST', 'SENDER_SIGNS_FIRST'])) {
+            $this->signatureFlow = $signatureFlow;
+        }
+
+        return $this;
+    }
+
+
 
     /**
      * @param FileInfo $info

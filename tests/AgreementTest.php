@@ -30,10 +30,10 @@ class AgreementTest extends PHPUnit_Framework_TestCase {
         $agreement = new \Echosign\Agreement($this->token);
         $agreement->setTransport($transport);
 
-        $docInfo = new \Echosign\Info\DocumentCreationInfo('123456abc', 'test','SIGNER','recipient@gmail.com');
+        $docInfo = new \Echosign\Info\DocumentCreationInfo( '123456abc', 'test', 'recipient@gmail.com', \Echosign\Info\DocumentCreationInfo::SIGN_ESIGN, \Echosign\Info\DocumentCreationInfo::FLOW_NOT_REQUIRED );
 
         $response = $agreement->create($docInfo);
-
+        $this->assertInstanceOf('Echosign\Responses\AgreementCreationResponse', $response);
         $this->assertEquals($return['embeddedCode'], $response->getEmbeddedCode());
         $this->assertEquals($return['expiration'], $response->getExpiration());
         $this->assertEquals($return['agreementId'], $response->getAgreementId());
