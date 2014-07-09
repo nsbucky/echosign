@@ -4,7 +4,7 @@ interface CacheInterface {
     /**
      * @param string $key
      * @param string $value
-     * @param integer $time
+     * @param integer $time seconds
      * @return void
      */
     public function put($key, $value, $time);

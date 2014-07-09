@@ -6,7 +6,7 @@ class LaravelCache implements CacheInterface {
 
     public function put($key, $value, $time)
     {
-        return \Cache::put($key, $value, $time);
+        return \Cache::put($key, $value, $time / 60 );
     }
 
     public function get($key, $default = null)
