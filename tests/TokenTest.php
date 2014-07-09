@@ -58,7 +58,7 @@ class TokenTest extends PHPUnit_Framework_TestCase {
 
         $token = new \Echosign\Token( $this->config['appID'], $this->config['secret'], $this->config['apiKey']);
         $token->setTransport( $request );
-        $token->setCacheHandler( new DummyCache() );
+        $token->setCacheHandler( new \Echosign\Cache\DummyCache() );
         $this->assertTrue($token->authenticate());
         $this->assertEquals('12345abc', $token->getAccessToken());
         $this->assertEquals(10, $token->getExpiresIn());
@@ -76,75 +76,13 @@ class TokenTest extends PHPUnit_Framework_TestCase {
 
         $token = new \Echosign\Token( $this->config['appID'], $this->config['secret'], $this->config['apiKey']);
         $token->setTransport( $request );
-        $token->setCacheHandler( new DummyCache() );
+        $token->setCacheHandler( new \Echosign\Cache\DummyCache() );
         $this->assertTrue($token->authenticate());
         $this->assertEquals('12345abc', $token->getAccessToken());
         $this->assertEquals(1, $token->getExpiresIn());
         sleep(1);
         $this->assertTrue($token->authenticate());
         $this->assertTrue( $token->isAuthenticated() );
-    }
-
-}
-
-
-class DummyCache implements \Echosign\Interfaces\CacheInterface {
-
-    protected $cache = [];
-
-    /**
-     * @param string $key
-     * @param string $value
-     * @param integer $time
-     * @return void
-     */
-    public function put($key, $value, $time)
-    {
-        $this->cache[$key] = [$value, time() + $time];
-    }
-
-    /**
-     * @param string $key
-     * @param null $default
-     * @return mixed
-     */
-    public function get($key, $default = null)
-    {
-        if( ! array_key_exists($key, $this->cache) ) return false;
-
-        list($value, $time) = $this->cache[$key];
-
-        // expired
-        if( time() > $time ) return false;
-
-        // still valid
-        if( time() < $time) return $value;
-    }
-
-    /**
-     * @param $key
-     * @return void
-     */
-    public function forget($key)
-    {
-        unset($this->cache[$key]);
-    }
-
-    /**
-     * @param $key
-     * @return boolean
-     */
-    public function has($key)
-    {
-        if( ! array_key_exists($key, $this->cache) ) return false;
-
-        list($value, $time) = $this->cache[$key];
-
-        // expired
-        if( time() > $time ) return false;
-
-        // still valid
-        if( time() < $time) return true;
     }
 
 }
