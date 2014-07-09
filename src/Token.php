@@ -2,6 +2,7 @@
 
 use Echosign\Credentials\Application;
 use Echosign\Credentials\User;
+use Echosign\Interfaces\CacheInterface;
 use Echosign\Responses\AccessToken;
 use Echosign\Responses\Error;
 use Echosign\Transports\Guzzle;
@@ -27,11 +28,15 @@ class Token implements RequestEntityInterface {
      */
     protected $accessToken;
 
-
     /**
      * @var Request
      */
     protected $transport;
+
+    /**
+     * @var CacheInterface
+     */
+    protected $cacheHandler;
 
     /**
      * @param $applicationId
@@ -44,6 +49,14 @@ class Token implements RequestEntityInterface {
     {
         $this->userCredentials = new User( $apiKey, $email, $password);
         $this->applicationCredentials = new Application($applicationSecret, $applicationId);
+    }
+
+    /**
+     * @param mixed $cacheHandler
+     */
+    public function setCacheHandler(CacheInterface $cacheHandler)
+    {
+        $this->cacheHandler = $cacheHandler;
     }
 
     /**
@@ -86,6 +99,14 @@ class Token implements RequestEntityInterface {
      */
     public function authenticate()
     {
+        if( isset( $this->cacheHandler ) && $this->cacheHandler->has('echosign_access_token') ) {
+            $this->accessToken = new AccessToken( [
+                'accessToken' => $this->cacheHandler->get('echosign_access_token'),
+                'expiresIn'   => $this->cacheHandler->get('echosign_expires_in'),
+            ]);
+            return true;
+        }
+
         $request = $this->getTransport();
 
         $response = $request->get($this);
@@ -95,6 +116,13 @@ class Token implements RequestEntityInterface {
         }
 
         $this->accessToken = new AccessToken( $response );
+
+        if( isset( $this->cacheHandler ) ) {
+            $expireTime = (int) $response['expiresIn'] / 60;
+            $this->cacheHandler->put('echosign_access_token', $response['accessToken'], $expireTime);
+            $this->cacheHandler->put('echosign_access_token', $response['expiresIn'], $expireTime);
+        }
+
         return true;
     }
 

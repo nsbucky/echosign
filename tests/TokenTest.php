@@ -48,4 +48,103 @@ class TokenTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals( 'INVALID_APP', $response->getCode() );
     }
 
+    public function testCacheToken()
+    {
+        $request = m::mock('Echosign\Transports\Guzzle');
+        $request->shouldReceive('get')->once()->andReturn([
+            'accessToken'=>'12345abc',
+            'expiresIn'=>10,
+        ]);
+
+        $token = new \Echosign\Token( $this->config['appID'], $this->config['secret'], $this->config['apiKey']);
+        $token->setTransport( $request );
+        $token->setCacheHandler( new DummyCache() );
+        $this->assertTrue($token->authenticate());
+        $this->assertEquals('12345abc', $token->getAccessToken());
+        $this->assertEquals(10, $token->getExpiresIn());
+        $this->assertTrue($token->authenticate());
+        $this->assertTrue( $token->isAuthenticated() );
+    }
+
+    public function testCacheTokenExpired()
+    {
+        $request = m::mock('Echosign\Transports\Guzzle');
+        $request->shouldReceive('get')->twice()->andReturn([
+            'accessToken'=>'12345abc',
+            'expiresIn'=>1,
+        ]);
+
+        $token = new \Echosign\Token( $this->config['appID'], $this->config['secret'], $this->config['apiKey']);
+        $token->setTransport( $request );
+        $token->setCacheHandler( new DummyCache() );
+        $this->assertTrue($token->authenticate());
+        $this->assertEquals('12345abc', $token->getAccessToken());
+        $this->assertEquals(1, $token->getExpiresIn());
+        sleep(1);
+        $this->assertTrue($token->authenticate());
+        $this->assertTrue( $token->isAuthenticated() );
+    }
+
+}
+
+
+class DummyCache implements \Echosign\Interfaces\CacheInterface {
+
+    protected $cache = [];
+
+    /**
+     * @param string $key
+     * @param string $value
+     * @param integer $time
+     * @return void
+     */
+    public function put($key, $value, $time)
+    {
+        $this->cache[$key] = [$value, time() + $time];
+    }
+
+    /**
+     * @param string $key
+     * @param null $default
+     * @return mixed
+     */
+    public function get($key, $default = null)
+    {
+        if( ! array_key_exists($key, $this->cache) ) return false;
+
+        list($value, $time) = $this->cache[$key];
+
+        // expired
+        if( time() > $time ) return false;
+
+        // still valid
+        if( time() < $time) return $value;
+    }
+
+    /**
+     * @param $key
+     * @return void
+     */
+    public function forget($key)
+    {
+        unset($this->cache[$key]);
+    }
+
+    /**
+     * @param $key
+     * @return boolean
+     */
+    public function has($key)
+    {
+        if( ! array_key_exists($key, $this->cache) ) return false;
+
+        list($value, $time) = $this->cache[$key];
+
+        // expired
+        if( time() > $time ) return false;
+
+        // still valid
+        if( time() < $time) return true;
+    }
+
 }
