@@ -109,7 +109,7 @@ class Token implements RequestEntityInterface {
 
         $request = $this->getTransport();
 
-        $response = $request->get($this);
+        $response = $request->post($this);
 
         if( $response instanceof Error ) {
             return $response;

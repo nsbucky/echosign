@@ -22,7 +22,7 @@ class TokenTest extends PHPUnit_Framework_TestCase {
     public function testAuthenticate()
     {
         $request = m::mock('Echosign\Transports\Guzzle');
-        $request->shouldReceive('get')->andReturn([
+        $request->shouldReceive('post')->andReturn([
             'accessToken'=>'12345abc',
             'expiresIn'=>123,
         ]);
