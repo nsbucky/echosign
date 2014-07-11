@@ -58,7 +58,7 @@ class Agreement implements RequestEntityInterface {
     public function create( DocumentCreationInfo $documentCreationInfo, InteractiveOptions $interactiveOptions = null, $userId=null, $userEmail=null )
     {
         $this->headers = array_filter([
-            'Accept'       => 'application/json',
+            'Content-Type' => 'application/json',
             'Access-Token' => $this->token->getAccessToken(),
             'X-User-Id'    => $userId,
             'X-User-Email' => $userEmail

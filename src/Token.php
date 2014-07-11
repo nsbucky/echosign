@@ -193,7 +193,7 @@ class Token implements RequestEntityInterface {
     public function getHeaders()
     {
         return [
-            'Accept' => 'application/json'
+            'Content-Type'=>'application/json'
         ];
     }
 

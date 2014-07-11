@@ -41,6 +41,7 @@ class User implements RequestEntityInterface {
     public function create( UserCreationInfo $info )
     {
         $this->headers = [
+            'Content-Type' => 'application/json',
             'Access-Token' => $this->token->getAccessToken(),
         ];
 

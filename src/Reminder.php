@@ -45,6 +45,7 @@ class Reminder implements RequestEntityInterface {
     public function create()
     {
         $this->headers = [
+            'Content-Type' => 'application/json',
             'Access-Token' => $this->token->getAccessToken(),
         ];
 
