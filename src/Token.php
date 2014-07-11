@@ -119,7 +119,7 @@ class Token implements RequestEntityInterface {
 
         if( isset( $this->cacheHandler ) ) {
             $this->cacheHandler->put('echosign_access_token', $response['accessToken'], (int) $response['expiresIn']);
-            $this->cacheHandler->put('echosign_access_token', $response['expiresIn'], (int) $response['expiresIn']);
+            $this->cacheHandler->put('echosign_expires_in', $response['expiresIn'], (int) $response['expiresIn']);
         }
 
         return true;
