@@ -166,6 +166,7 @@ class TransientDocument implements RequestEntityInterface {
         }
 
         $this->transport = new Guzzle();
+        return $this->transport;
     }
 
     /**

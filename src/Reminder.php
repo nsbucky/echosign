@@ -111,6 +111,7 @@ class Reminder implements RequestEntityInterface {
 
         // create a default transport just in case.
         $this->transport = new Guzzle();
+        return $this->transport;
     }
 
     /**
