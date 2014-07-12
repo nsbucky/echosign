@@ -6,6 +6,7 @@ use Echosign\Responses\DocumentLibraryItems;
 use Echosign\Responses\Documents;
 use Echosign\Responses\LibraryDocumentInfo;
 use Echosign\Responses\Error;
+use Echosign\Transports\Guzzle;
 
 class LibraryDocument implements RequestEntityInterface {
 

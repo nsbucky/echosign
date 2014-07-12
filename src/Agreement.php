@@ -13,6 +13,7 @@ use Echosign\Responses\SigningUrls;
 use Echosign\Responses\UserAgreements;
 use Echosign\Info\AgreementStatusUpdateInfo;
 use Echosign\Responses\Error;
+use Echosign\Transports\Guzzle;
 
 class Agreement implements RequestEntityInterface {
 
