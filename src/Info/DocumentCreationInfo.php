@@ -19,7 +19,7 @@ class DocumentCreationInfo implements InfoInterface {
     protected $signatureType = 'ESIGN';
     public $callbackinfo;
     public $daysUntilSigningDeadline;
-    public $locale;
+    public $locale = 'en_US';
 
     /**
      * SENDER_SIGNATURE_NOT_REQUIRED, SENDER_SIGNS_LAST, or SENDER_SIGNS_FIRST
