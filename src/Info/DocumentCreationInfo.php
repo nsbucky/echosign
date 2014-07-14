@@ -54,6 +54,7 @@ class DocumentCreationInfo implements InfoInterface {
         if( is_scalar( $transientDocumentId ) ) {
             $info = new FileInfo;
             $info->transientDocumentId = $transientDocumentId;
+            $this->fileInfos[] = $info;
         }
 
         $this->setAgreementName($name);
