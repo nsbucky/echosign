@@ -262,6 +262,15 @@ class Agreement implements RequestEntityInterface {
         return new SigningUrls( $response );
     }
 
+    /**
+     * @param $agreementId
+     * @param null $versionId
+     * @param null $participantEmail
+     * @param bool $attachSupportingDocuments
+     * @param bool $auditReport
+     * @return bool|string
+     * @throws \RuntimeException
+     */
     public function combinedDocument($agreementId, $versionId=null, $participantEmail=null, $attachSupportingDocuments=false, $auditReport=false)
     {
         $query = [

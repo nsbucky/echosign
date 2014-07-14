@@ -22,6 +22,10 @@ class Guzzle implements TransportInterface {
         $this->client = new \GuzzleHttp\Client();
     }
 
+    /**
+     * @param RequestEntityInterface $entity
+     * @return string
+     */
     public function buildUrl( RequestEntityInterface $entity )
     {
         return $this->baseUrl . $entity->getEndPoint();
@@ -33,7 +37,7 @@ class Guzzle implements TransportInterface {
 
         if( $response->getStatusCode() >= 400 ) {
             // oops an error with the response
-            return new Error( $json['code'], $json['message'] );
+            return new Error( $response->getStatusCode(), $json['code'], $json['message'] );
         }
 
         return $json;
@@ -44,7 +48,7 @@ class Guzzle implements TransportInterface {
         try {
             $response = $this->client->get($this->buildUrl($entity),[
                     'headers' => $entity->getHeaders(),
-                    'body' => $entity->getBody()
+                    //'body' => $entity->getBody()
                 ]
             );
         } catch( ClientException $e ) {
