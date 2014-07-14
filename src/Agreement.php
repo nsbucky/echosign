@@ -66,7 +66,8 @@ class Agreement implements RequestEntityInterface {
         ]);
 
         // set this data to be called by transport
-        $this->data = new AgreementCreationInfo( $documentCreationInfo, $interactiveOptions );
+        $agreementInfo = new AgreementCreationInfo( $documentCreationInfo, $interactiveOptions );
+        $this->data = $agreementInfo->toArray();
 
         $request  = $this->getTransport();
         $response = $request->post($this);

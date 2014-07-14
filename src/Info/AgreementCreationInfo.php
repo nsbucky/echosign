@@ -21,7 +21,9 @@ class AgreementCreationInfo implements InfoInterface {
     {
         return array_filter([
             'documentCreationInfo' => $this->documentCreationInfo->toArray(),
-            'options'              => $this->interactiveOptions->toArray(),
+            'options'              => $this->interactiveOptions instanceof InteractiveOptions
+                                        ? $this->interactiveOptions->toArray()
+                                        : null,
         ]);
     }
 
