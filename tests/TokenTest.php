@@ -39,7 +39,7 @@ class TokenTest extends PHPUnit_Framework_TestCase {
     public function testAuthenticateGivesError()
     {
         $request = m::mock('Echosign\Transports\Guzzle');
-        $request->shouldReceive('get')->andReturn(new Echosign\Responses\Error('INVALID_APP','An invalid application ID or secret was specified.'));
+        $request->shouldReceive('post')->andReturn(new Echosign\Responses\Error(400,'INVALID_APP','An invalid application ID or secret was specified.'));
 
         $token = new \Echosign\Token( $this->config['appID'], $this->config['secret'], $this->config['apiKey']);
         $token->setTransport( $request );
@@ -51,7 +51,7 @@ class TokenTest extends PHPUnit_Framework_TestCase {
     public function testCacheToken()
     {
         $request = m::mock('Echosign\Transports\Guzzle');
-        $request->shouldReceive('get')->once()->andReturn([
+        $request->shouldReceive('post')->once()->andReturn([
             'accessToken'=>'12345abc',
             'expiresIn'=>10,
         ]);
@@ -69,7 +69,7 @@ class TokenTest extends PHPUnit_Framework_TestCase {
     public function testCacheTokenExpired()
     {
         $request = m::mock('Echosign\Transports\Guzzle');
-        $request->shouldReceive('get')->twice()->andReturn([
+        $request->shouldReceive('post')->twice()->andReturn([
             'accessToken'=>'12345abc',
             'expiresIn'=>1,
         ]);

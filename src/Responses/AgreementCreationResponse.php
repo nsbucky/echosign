@@ -16,6 +16,7 @@ class AgreementCreationResponse {
         if( isset( $response['expiration'] ) ) {
             $this->expiration = \DateTime::createFromFormat( \DateTime::W3C, $response['expiration'] );
         }
+
     }
 
     /**

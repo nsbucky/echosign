@@ -39,23 +39,15 @@ class DocumentCreationInfo implements InfoInterface {
     protected $fileInfos = [ ];
 
     /**
-     * @param $transientDocumentId
+     * @param FileInfo $fileInfo
      * @param $name
      * @param $signerEmail
      * @param $signatureType
      * @param $signatureFlow
      */
-    public function __construct( $transientDocumentId, $name, $signerEmail, $signatureType, $signatureFlow )
+    public function __construct( FileInfo $fileInfo, $name, $signerEmail, $signatureType, $signatureFlow )
     {
-        if( $transientDocumentId instanceof TransientDocument ) {
-            $this->addTransientDocument( $transientDocumentId );
-        }
-
-        if( is_scalar( $transientDocumentId ) ) {
-            $info = new FileInfo;
-            $info->transientDocumentId = $transientDocumentId;
-            $this->fileInfos[] = $info;
-        }
+        $this->fileInfos[] = $fileInfo;
 
         $this->setAgreementName($name);
 

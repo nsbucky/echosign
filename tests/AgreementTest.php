@@ -19,7 +19,7 @@ class AgreementTest extends PHPUnit_Framework_TestCase {
     {
         $return = [
             "embeddedCode"=> "<script type='text/javascript' language='JavaScript' src='https://secure.echosign.com/embed/public/apiLogin?aalc=2AAABLblqZhCLSCUdCzl12KADeV4p7qZdJGbvZxslHruG00s8isauKjnQGAWd1jHq2d67jT_A8nI1Rha9ijWRxjBcIUZuL3m5dPAPyFKBD8wAB0goNmv1E-NVtpSgKhuZ2PBiVp6BlNI*&noChrome=true'></script>",
-            "expiration"=> "2014-07-04T08:17:50.212-07:00",
+            "expiration"=> "2014-07-07T08:39:24-07:00",
             "agreementId"=> "2AAABLblqZhBXIFwsI6hzV5IzticsCNYH2wZFgfEdo8mhhpOMZR261g3d5tR9RHpg6ckTZFftG2o*",
             "url"=> "https://secure.echosign.com/public/apiLogin?aalc=2AAABLblqZhCLSCUdCzl12KADeV4p7qZdJGbvZxslHruG00s8isauKjnQGAWd1jHq2d67jT_A8nI1Rha9ijWRxjBcIUZuL3m5dPAPyFKBD8wAB0goNmv1E-NVtpSgKhuZ2PBiVp6BlNI*"
         ];
@@ -30,12 +30,14 @@ class AgreementTest extends PHPUnit_Framework_TestCase {
         $agreement = new \Echosign\Agreement($this->token);
         $agreement->setTransport($transport);
 
-        $docInfo = new \Echosign\Info\DocumentCreationInfo( '123456abc', 'test', 'recipient@gmail.com', \Echosign\Info\DocumentCreationInfo::SIGN_ESIGN, \Echosign\Info\DocumentCreationInfo::FLOW_NOT_REQUIRED );
+        $fileInfos = new \Echosign\Info\FileInfo();
+        $fileInfos->setDocumentURL('test.pdf','http://www.yahoo.com','application/pdf');
+        $docInfo = new \Echosign\Info\DocumentCreationInfo( $fileInfos, 'test', 'recipient@gmail.com', \Echosign\Info\DocumentCreationInfo::SIGN_ESIGN, \Echosign\Info\DocumentCreationInfo::FLOW_NOT_REQUIRED );
 
         $response = $agreement->create($docInfo);
         $this->assertInstanceOf('Echosign\Responses\AgreementCreationResponse', $response);
         $this->assertEquals($return['embeddedCode'], $response->getEmbeddedCode());
-        $this->assertEquals($return['expiration'], $response->getExpiration());
+        $this->assertInstanceOf('\DateTime',$response->getExpiration());
         $this->assertEquals($return['agreementId'], $response->getAgreementId());
         $this->assertEquals($return['url'], $response->getUrl());
     }
