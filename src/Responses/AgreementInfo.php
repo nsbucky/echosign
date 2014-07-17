@@ -24,12 +24,12 @@ class AgreementInfo {
 
     public function __construct( array $response, Agreement $agreement )
     {
-        $this->message         = $response['message'];
+        $this->message         = \Echosign\array_get($response,'message');
         $this->expiration      = array_key_exists( 'expiration', $response ) ? \DateTime::createFromFormat( \DateTime::W3C, $response['expiration'] ) : null;
-        $this->locale          = $response['locale'];
-        $this->name            = $response['name'];
-        $this->agreementId     = $response['agreementId'];
-        $this->latestVersionId = $response['latestVersionId'];
+        $this->locale          = \Echosign\array_get($response,'locale');
+        $this->name            = \Echosign\array_get($response,'name');
+        $this->agreementId     = \Echosign\array_get($response,'agreementId');
+        $this->latestVersionId = \Echosign\array_get($response,'latestVersionId');
 
         if( array_key_exists('securityOptions', $response) ) {
             foreach( $response['securityOptions'] as $option ) {
