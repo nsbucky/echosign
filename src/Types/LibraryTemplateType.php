@@ -15,7 +15,7 @@ class LibraryTemplateType {
      */
     public function __construct( $type )
     {
-        if( ! in_array( $type, $this->messages ) ) {
+        if( ! array_key_exists( $type, $this->messages ) ) {
             throw new \InvalidArgumentException("Invalid type set for ". __CLASS__);
         }
         $this->type = $type;

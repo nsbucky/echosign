@@ -16,7 +16,7 @@ class DocumentLibraryItemScope {
      */
     public function __construct( $scope )
     {
-        if( ! in_array( $scope, $this->messages ) ) {
+        if( ! array_key_exists( $scope, $this->messages ) ) {
             throw new \InvalidArgumentException("Invalid scope set for ". __CLASS__);
         }
 

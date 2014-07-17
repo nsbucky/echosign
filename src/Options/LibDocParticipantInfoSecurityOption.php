@@ -15,7 +15,7 @@ class LibDocParticipantInfoSecurityOption {
      */
     public function __construct( $status )
     {
-        if( ! in_array( $status, $this->messages ) ) {
+        if( ! array_key_exists( $status, $this->messages ) ) {
             throw new \InvalidArgumentException("Invalid status set for ". __CLASS__);
         }
 

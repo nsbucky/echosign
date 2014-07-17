@@ -14,7 +14,7 @@ class LibDocSecurityOption {
      */
     public function __construct( $option )
     {
-        if( ! in_array( $option, $this->optionMessages ) ) {
+        if( ! array_key_exists( $option, $this->optionMessages ) ) {
             throw new \InvalidArgumentException("Invalid option set for ". __CLASS__);
         }
         $this->option = $option;

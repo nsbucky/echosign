@@ -20,7 +20,7 @@ class ParticipantRole {
      */
     public function __construct( $role )
     {
-        if( ! in_array( $role, $this->descriptions ) ) {
+        if( ! array_key_exists( $role, $this->descriptions ) ) {
             throw new \InvalidArgumentException("Invalid role set for ". __CLASS__);
         }
 
