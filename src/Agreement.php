@@ -111,6 +111,7 @@ class Agreement implements RequestEntityInterface {
      */
     public function get($agreementId)
     {
+        $this->endPoint = $agreementId;
         $this->headers = [
             'Access-Token' => $this->token->getAccessToken(),
             'agreementId'  => $agreementId,
