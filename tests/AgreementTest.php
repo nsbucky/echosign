@@ -33,8 +33,12 @@ class AgreementTest extends PHPUnit_Framework_TestCase {
         $fileInfos = new \Echosign\Info\FileInfo();
         $fileInfos->setDocumentURL('test.pdf','http://www.yahoo.com','application/pdf');
         $docInfo = new \Echosign\Info\DocumentCreationInfo( $fileInfos, 'test', 'recipient@gmail.com', \Echosign\Info\DocumentCreationInfo::SIGN_ESIGN, \Echosign\Info\DocumentCreationInfo::FLOW_NOT_REQUIRED );
-
-        $response = $agreement->create($docInfo);
+        $interActiveOptions = new Echosign\Options\InteractiveOptions();
+        /**
+         * if this is not set to true YOU WILL NOT GET BACK A SIGNING URL OR EMBEDDED CODE. OMFG.
+         */
+        $interActiveOptions->autoLoginUser = true;
+        $response = $agreement->create($docInfo, $interActiveOptions);
         $this->assertInstanceOf('Echosign\Responses\AgreementCreationResponse', $response);
         $this->assertEquals($return['embeddedCode'], $response->getEmbeddedCode());
         $this->assertInstanceOf('\DateTime',$response->getExpiration());
