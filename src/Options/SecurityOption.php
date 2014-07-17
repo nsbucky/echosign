@@ -17,7 +17,7 @@ class SecurityOption implements OptionsInterface {
      */
     public function toArray()
     {
-        return [
+        return array_filter([
             'passwordProtection'=>$this->passwordProtection,
             'kbaProtection'=>$this->kbaProtection,
             'webIdentityProtection'=>$this->webIdentityProtection,
@@ -25,7 +25,7 @@ class SecurityOption implements OptionsInterface {
             'internalPassword'=>$this->internalPassword,
             'externalPassword'=>$this->externalPassword,
             'openPassword'=>$this->openPassword,
-        ];
+        ]);
     }
 
     /**

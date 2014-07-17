@@ -39,8 +39,15 @@ class AgreementEventType {
         'KBA_AUTHENTICATION_FAILED'         => 'Signer failed all Knowledge Based Authentication authentication attempts'
     ];
 
+    /**
+     * @param $status
+     * @throws \InvalidArgumentException
+     */
     public function __construct( $status )
     {
+        if( ! in_array( $status, $this->statusMessages ) ) {
+            throw new \InvalidArgumentException("Invalid status set for ". __CLASS__);
+        }
         $this->status = $status;
     }
 

@@ -20,8 +20,15 @@ class UserDocumentStatus {
         'WAITING_FOR_FAXIN' => 'The current user needs to fax in the original document',
     ];
 
+    /**
+     * @param $status
+     * @throws \InvalidArgumentException
+     */
     public function __construct( $status )
     {
+        if( ! in_array( $status, $this->statusMessages ) ) {
+            throw new \InvalidArgumentException("Invalid status set for ". __CLASS__);
+        }
         $this->status = $status;
     }
     

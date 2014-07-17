@@ -8,8 +8,15 @@ class LibDocSecurityOption {
         'OPEN_PROTECTED'=>'A password is required to open the document'
     ];
 
+    /**
+     * @param $option
+     * @throws \InvalidArgumentException
+     */
     public function __construct( $option )
     {
+        if( ! in_array( $option, $this->optionMessages ) ) {
+            throw new \InvalidArgumentException("Invalid option set for ". __CLASS__);
+        }
         $this->option = $option;
     }
 

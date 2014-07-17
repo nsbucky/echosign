@@ -80,7 +80,7 @@ class UserAgreement {
 
     public function getAgreementInfo()
     {
-        return $this->agreement->get();
+        return $this->agreement->get($this->agreementId);
     }
 
 }

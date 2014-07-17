@@ -123,12 +123,16 @@ class DocumentCreationInfo implements InfoInterface {
     /**
      * @param $type
      * @return $this
+     * @throws \InvalidArgumentException
      */
     public function setSignatureType($type)
     {
-        if( in_array($type, ['ESIGN','WRITTEN'])) {
-            $this->signatureType = $type;
+        $allowed = ['ESIGN','WRITTEN'];
+        if( ! in_array($type, $allowed)) {
+            throw new \InvalidArgumentException('Invalid signature type provided. Must be one of: ' . implode(', ', $allowed) );
         }
+
+        $this->signatureType = $type;
 
         return $this;
     }
@@ -136,12 +140,17 @@ class DocumentCreationInfo implements InfoInterface {
     /**
      * @param string $signatureFlow
      * @return $this
+     * @throws \InvalidArgumentException
      */
     public function setSignatureFlow( $signatureFlow )
     {
-        if( in_array($signatureFlow, ['SENDER_SIGNATURE_NOT_REQUIRED', 'SENDER_SIGNS_LAST', 'SENDER_SIGNS_FIRST'])) {
-            $this->signatureFlow = $signatureFlow;
+        $allowed = ['SENDER_SIGNATURE_NOT_REQUIRED', 'SENDER_SIGNS_LAST', 'SENDER_SIGNS_FIRST'];
+        if( ! in_array($signatureFlow, $allowed)) {
+            throw new \InvalidArgumentException('Invalid signature flow provided. Must be one of: ' . implode(', ', $allowed) );
+
         }
+
+        $this->signatureFlow = $signatureFlow;
 
         return $this;
     }

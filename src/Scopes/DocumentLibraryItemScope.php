@@ -10,8 +10,16 @@ class DocumentLibraryItemScope {
         'PERSONAL'=>'This library document belongs to a specific user',
     ];
 
+    /**
+     * @param $scope
+     * @throws \InvalidArgumentException
+     */
     public function __construct( $scope )
     {
+        if( ! in_array( $scope, $this->messages ) ) {
+            throw new \InvalidArgumentException("Invalid scope set for ". __CLASS__);
+        }
+
         $this->scope = $scope;
     }
 

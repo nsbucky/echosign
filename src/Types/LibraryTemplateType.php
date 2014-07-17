@@ -9,8 +9,15 @@ class LibraryTemplateType {
         'FORM_FIELD_LAYER'=>'This library document is shared by another user in the group or account'
     ];
 
+    /**
+     * @param $type
+     * @throws \InvalidArgumentException
+     */
     public function __construct( $type )
     {
+        if( ! in_array( $type, $this->messages ) ) {
+            throw new \InvalidArgumentException("Invalid type set for ". __CLASS__);
+        }
         $this->type = $type;
     }
 

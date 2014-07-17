@@ -12,7 +12,7 @@ class RecipientInfo implements InfoInterface {
     {
         $this->email = filter_var( $email, FILTER_SANITIZE_EMAIL );
         $this->fax   = filter_var( $fax, FILTER_SANITIZE_NUMBER_INT );
-        if( ! in_array($role, ['SIGNER','APPROVER']) ) {
+        if( $role !== null && in_array($role, ['SIGNER','APPROVER']) ) {
             $role = null;
         }
         $this->role = $role;

@@ -38,8 +38,15 @@ class EventType
         'KBA_AUTHENTICATION_FAILED'         => 'Signer failed all Knowledge Based Authentication authentication attempts'
     ];
 
+    /**
+     * @param $type
+     * @throws \InvalidArgumentException
+     */
     public function __construct( $type )
     {
+        if( ! in_array( $type, $this->messages ) ) {
+            throw new \InvalidArgumentException("Invalid type set for ". __CLASS__);
+        }
         $this->type = $type;
     }
 

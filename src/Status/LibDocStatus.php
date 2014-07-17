@@ -24,8 +24,15 @@ class LibDocStatus {
         'WAITING_FOR_FAXIN'               => 'The document is waiting for the sender to fax in the document contents before it can be sent for signature'
     ];
 
+    /**
+     * @param $status
+     * @throws \InvalidArgumentException
+     */
     public function __construct( $status )
     {
+        if( ! in_array( $status, $this->statusMessages ) ) {
+            throw new \InvalidArgumentException("Invalid status set for ". __CLASS__);
+        }
         $this->status = $status;
     }
 

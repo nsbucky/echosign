@@ -27,8 +27,15 @@ class UserLibDocumentStatus {
         'WAITING_FOR_FAXIN'        => 'The document is waiting for the signature to be faxed-in'
     ];
 
+    /**
+     * @param $status
+     * @throws \InvalidArgumentException
+     */
     public function __construct( $status )
     {
+        if( ! in_array( $status, $this->statusMessages ) ) {
+            throw new \InvalidArgumentException("Invalid status set for ". __CLASS__);
+        }
         $this->status = $status;
     }
 
