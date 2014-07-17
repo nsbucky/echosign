@@ -45,7 +45,7 @@ class AgreementEventType {
      */
     public function __construct( $status )
     {
-        if( ! array_key_exists( $status, $this->statusMessages ) ) {
+        if( ! array_key_exists( $status, $this->messages ) ) {
             throw new \InvalidArgumentException("Invalid status set for ". __CLASS__);
         }
         $this->status = $status;
