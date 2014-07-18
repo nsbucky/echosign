@@ -31,16 +31,21 @@ class Guzzle implements TransportInterface {
         return $this->baseUrl . $entity->getEndPoint();
     }
 
+    /**
+     * @param \GuzzleHttp\Message\Response $response
+     * @return Error
+     */
     protected function handleResponse( $response )
     {
-        if( ! $response->isContentType('application/json') ) {
+        $contentType = $response->getHeader('content-type');
+
+        if( stripos($contentType, 'application/json') === false ) {
             return $response;
         }
 
         $json = $response->json();
 
         if( $response->getStatusCode() >= 400 ) {
-
             // oops an error with the response
             return new Error( $response->getStatusCode(), $json['code'], $json['message'] );
         }
