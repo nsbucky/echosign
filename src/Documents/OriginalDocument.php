@@ -45,13 +45,14 @@ class OriginalDocument {
 
     /**
      * @param string $savePath
+     * @param $fileName
      * @return string|boolean if successful the saved path to the file or false if it fails
      */
-    public function downloadDocument($savePath)
+    public function downloadDocument($savePath, $fileName)
     {
         $library = $this->documents->getLibraryDocument();
 
-        $file = $library->document( $this->documents->getLibraryDocumentId(), $this->getId() );
+        $file = $library->document( $this->documents->getLibraryDocumentId(), $this->getId(), $fileName );
 
         if( false === $file ) {
             return false;

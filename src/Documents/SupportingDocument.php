@@ -54,13 +54,14 @@ class SupportingDocument {
 
     /**
      * @param string $savePath
+     * @param $fileName
      * @return string|boolean if successful the saved path to the file or false if it fails
      */
-    public function downloadDocument($savePath)
+    public function downloadDocument($savePath, $fileName)
     {
         $agreement = $this->agreementDoc->getAgreement();
 
-        $file = $agreement->document( $this->agreementDoc->getAgreementId(), $this->getId() );
+        $file = $agreement->document( $this->agreementDoc->getAgreementId(), $this->getId(), $fileName );
 
         if( false === $file ) {
             return false;

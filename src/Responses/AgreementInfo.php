@@ -140,11 +140,12 @@ class AgreementInfo {
 
     /**
      * saves audit trail to tmp dir on success. you can move the file later.
+     * @param $fileName
      * @return string path to file
      */
-    public function downloadAuditTrail()
+    public function downloadAuditTrail($fileName)
     {
-        return $this->agreement->auditTrail( $this->agreementId );
+        return $this->agreement->auditTrail( $this->agreementId, $fileName );
     }
 
 }
