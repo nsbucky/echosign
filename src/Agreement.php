@@ -41,6 +41,8 @@ class Agreement implements RequestEntityInterface {
 
     protected $data = [];
 
+    protected $saveToPath = null;
+
     /**
      * @param Token $token
      */
@@ -185,8 +187,9 @@ class Agreement implements RequestEntityInterface {
             'Access-Token' => $this->token->getAccessToken(),
             'agreementId'  => $agreementId,
             'documentId'   => $documentId,
-            'save_to'      => $fileName,
         ];
+
+        $this->saveToPath = $fileName;
 
         $this->data = [];
         $request  = $this->getTransport();
@@ -226,8 +229,9 @@ class Agreement implements RequestEntityInterface {
         $this->headers = [
             'Access-Token' => $this->token->getAccessToken(),
             'agreementId'  => $agreementId,
-            'save_to'      => $fileName,
         ];
+
+        $this->saveToPath = $fileName;
 
         $this->data = [];
         $request  = $this->getTransport();
@@ -302,8 +306,9 @@ class Agreement implements RequestEntityInterface {
         $this->headers = [
             'Access-Token' => $this->token->getAccessToken(),
             'agreementId'  => $agreementId,
-            'save_to'      => $fileName,
         ];
+
+        $this->saveToPath = $fileName;
 
         $this->data = [];
         $request  = $this->getTransport();
@@ -430,5 +435,11 @@ class Agreement implements RequestEntityInterface {
         return $this->toJson();
     }
 
-
+    /**
+     * @return string
+     */
+    public function getSaveTo()
+    {
+        return $this->saveToPath;
+    }
 }

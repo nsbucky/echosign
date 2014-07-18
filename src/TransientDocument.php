@@ -192,4 +192,13 @@ class TransientDocument implements RequestEntityInterface {
         return $this->toArray();
     }
 
+    /**
+     * @return string
+     */
+    public function getSaveTo()
+    {
+        return null;
+    }
+
+
 }

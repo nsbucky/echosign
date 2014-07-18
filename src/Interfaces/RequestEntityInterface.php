@@ -42,4 +42,9 @@ interface RequestEntityInterface {
      */
     public function getBody();
 
+    /**
+     * @return string
+     */
+    public function getSaveTo();
+
 }

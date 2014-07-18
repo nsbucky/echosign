@@ -15,6 +15,7 @@ class LibraryDocument implements RequestEntityInterface {
     protected $headers = [];
     protected $data = [];
     protected $endPoint = '';
+    protected $saveToPath = null;
 
     /**
      * @var Token
@@ -308,6 +309,14 @@ class LibraryDocument implements RequestEntityInterface {
     public function getBody()
     {
         return $this->toJson();
+    }
+
+    /**
+     * @return string
+     */
+    public function getSaveTo()
+    {
+        return $this->saveToPath;
     }
 
 

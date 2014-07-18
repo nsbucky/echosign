@@ -139,5 +139,13 @@ class Reminder implements RequestEntityInterface {
         return $this->toJson();
     }
 
+    /**
+     * @return string
+     */
+    public function getSaveTo()
+    {
+        return null;
+    }
+
 
 }
