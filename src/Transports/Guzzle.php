@@ -55,13 +55,18 @@ class Guzzle implements TransportInterface {
 
     public function get( RequestEntityInterface $entity )
     {
+        $options = [
+            'headers' => $entity->getHeaders()
+        ];
+
+        $saveTo = $entity->getSaveTo();
+
+        if( $saveTo ) {
+            $options['save_to'] = $saveTo;
+        }
+
         try {
-            $response = $this->client->get($this->buildUrl($entity), [
-                    'headers' => $entity->getHeaders(),
-                    'save_to' => $entity->getSaveTo(),
-                    //'body' => $entity->getBody()
-                ]
-            );
+            $response = $this->client->get($this->buildUrl($entity), $options);
         } catch( ClientException $e ) {
             $response = $e->getResponse();
         }
