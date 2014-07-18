@@ -33,9 +33,14 @@ class Guzzle implements TransportInterface {
 
     protected function handleResponse( $response )
     {
+        if( ! $response->isContentType('application/json') ) {
+            return $response;
+        }
+
         $json = $response->json();
 
         if( $response->getStatusCode() >= 400 ) {
+
             // oops an error with the response
             return new Error( $response->getStatusCode(), $json['code'], $json['message'] );
         }
