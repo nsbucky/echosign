@@ -194,7 +194,7 @@ class LibraryDocumentTest extends PHPUnit_Framework_TestCase {
         $agreement = new \Echosign\LibraryDocument($this->token);
         $agreement->setTransport($transport);
 
-        $documentPath = $agreement->document('balls',$documentId);
+        $documentPath = $agreement->document('balls', $documentId, $file);
         $this->assertTrue( is_readable($file));
 
         $this->assertEquals($file, $documentPath);
@@ -214,7 +214,7 @@ class LibraryDocumentTest extends PHPUnit_Framework_TestCase {
         $doc = new \Echosign\LibraryDocument($this->token);
         $doc->setTransport($transport);
 
-        $documentPath = $doc->auditTrail($documentId);
+        $documentPath = $doc->auditTrail($documentId, $file);
         $this->assertTrue( is_readable($file));
 
         $this->assertEquals($file, $documentPath);
@@ -234,7 +234,7 @@ class LibraryDocumentTest extends PHPUnit_Framework_TestCase {
         $doc = new \Echosign\LibraryDocument($this->token);
         $doc->setTransport($transport);
 
-        $documentPath = $doc->combinedDocument($documentId);
+        $documentPath = $doc->combinedDocument($documentId, $file);
         $this->assertTrue( is_readable($file));
 
         $this->assertEquals($file, $documentPath);

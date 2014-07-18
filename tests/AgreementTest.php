@@ -253,7 +253,7 @@ class AgreementTest extends PHPUnit_Framework_TestCase {
         $agreement = new \Echosign\Agreement($this->token);
         $agreement->setTransport($transport);
 
-        $documentPath = $agreement->document('balls',$documentId);
+        $documentPath = $agreement->document('balls', $documentId, $file);
         $this->assertTrue( is_readable($file));
 
         $this->assertEquals($file, $documentPath);
@@ -273,7 +273,7 @@ class AgreementTest extends PHPUnit_Framework_TestCase {
         $agreement = new \Echosign\Agreement($this->token);
         $agreement->setTransport($transport);
 
-        $documentPath = $agreement->auditTrail($agreementId);
+        $documentPath = $agreement->auditTrail($agreementId, $file);
         $this->assertTrue( is_readable($file));
 
         $this->assertEquals($file, $documentPath);
@@ -323,7 +323,7 @@ class AgreementTest extends PHPUnit_Framework_TestCase {
         $agreement = new \Echosign\Agreement($this->token);
         $agreement->setTransport($transport);
 
-        $documentPath = $agreement->combinedDocument($agreementId);
+        $documentPath = $agreement->combinedDocument($agreementId, $file);
         $this->assertTrue( is_readable($file));
 
         $this->assertEquals($file, $documentPath);

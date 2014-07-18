@@ -110,13 +110,15 @@ class LibraryDocument implements RequestEntityInterface {
     /**
      * @param $libraryDocumentId
      * @param $documentId
+     * @param $fileName
      * @return bool|string
      * @throws \RuntimeException
      */
-    public function document( $libraryDocumentId, $documentId )
+    public function document( $libraryDocumentId, $documentId, $fileName )
     {
         $this->endPoint = $libraryDocumentId . '/documents/' .$documentId;
 
+        /*
         $savePath = sys_get_temp_dir();
 
         if( ! is_writable( $savePath ) ) {
@@ -124,6 +126,7 @@ class LibraryDocument implements RequestEntityInterface {
         }
 
         $fileName = $savePath . DIRECTORY_SEPARATOR . substr( $documentId, 0, 16);
+        */
 
         $this->headers = [
             'Access-Token' => $this->token->getAccessToken(),
@@ -149,13 +152,15 @@ class LibraryDocument implements RequestEntityInterface {
 
     /**
      * @param $libraryDocumentId
+     * @param $fileName
      * @return bool|string
      * @throws \RuntimeException
      */
-    public function auditTrail( $libraryDocumentId )
+    public function auditTrail( $libraryDocumentId, $fileName )
     {
         $this->endPoint = $libraryDocumentId . '/auditTrail' ;
 
+        /*
         $savePath = sys_get_temp_dir();
 
         if( ! is_writable( $savePath ) ) {
@@ -163,6 +168,7 @@ class LibraryDocument implements RequestEntityInterface {
         }
 
         $fileName = $savePath . DIRECTORY_SEPARATOR . substr( $libraryDocumentId, 0, 16). '.pdf';
+        */
 
         $this->headers = [
             'Access-Token' => $this->token->getAccessToken(),
@@ -187,11 +193,12 @@ class LibraryDocument implements RequestEntityInterface {
 
     /**
      * @param $libraryDocumentId
+     * @param $fileName
      * @param bool $auditReport
      * @return bool|string
      * @throws \RuntimeException
      */
-    public function combinedDocument( $libraryDocumentId, $auditReport = false )
+    public function combinedDocument( $libraryDocumentId, $fileName, $auditReport = false )
     {
         $query = [
             'auditReport'               => $auditReport,
@@ -199,6 +206,7 @@ class LibraryDocument implements RequestEntityInterface {
 
         $this->endPoint = $libraryDocumentId .'/combinedDocument?'.http_build_query($query) ;
 
+        /*
         $savePath = sys_get_temp_dir();
 
         if( ! is_writable( $savePath ) ) {
@@ -206,6 +214,7 @@ class LibraryDocument implements RequestEntityInterface {
         }
 
         $fileName = $savePath . DIRECTORY_SEPARATOR . substr( $libraryDocumentId, 0, 16). '.pdf';
+        */
 
         $this->headers = [
             'Access-Token' => $this->token->getAccessToken(),

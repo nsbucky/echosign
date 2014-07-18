@@ -164,13 +164,15 @@ class Agreement implements RequestEntityInterface {
     /**
      * @param $agreementId
      * @param $documentId
+     * @param $fileName
      * @throws \RuntimeException when savePath is not writeable
      * @return boolean|string path to saved file
      */
-    public function document($agreementId, $documentId)
+    public function document($agreementId, $documentId, $fileName)
     {
         $this->endPoint = $agreementId .'/documents/'.$documentId;
 
+        /*
         $savePath = sys_get_temp_dir();
 
         if( ! is_writable( $savePath ) ) {
@@ -178,7 +180,7 @@ class Agreement implements RequestEntityInterface {
         }
 
         $fileName = $savePath . DIRECTORY_SEPARATOR . substr( $documentId, 0, 16);
-
+        */
         $this->headers = [
             'Access-Token' => $this->token->getAccessToken(),
             'agreementId'  => $agreementId,
@@ -203,13 +205,15 @@ class Agreement implements RequestEntityInterface {
 
     /**
      * @param $agreementId
+     * @param $fileName
      * @return bool|string
      * @throws \RuntimeException
      */
-    public function auditTrail($agreementId)
+    public function auditTrail($agreementId, $fileName)
     {
         $this->endPoint = $agreementId . '/auditTrail';
 
+        /*
         $savePath = sys_get_temp_dir();
 
         if( ! is_writable( $savePath ) ) {
@@ -217,6 +221,7 @@ class Agreement implements RequestEntityInterface {
         }
 
         $fileName = $savePath . DIRECTORY_SEPARATOR . substr( $agreementId, 0, 16). '.pdf';
+        */
 
         $this->headers = [
             'Access-Token' => $this->token->getAccessToken(),
@@ -265,6 +270,7 @@ class Agreement implements RequestEntityInterface {
 
     /**
      * @param $agreementId
+     * @param string $fileName /path/to/fileName.ext
      * @param null $versionId
      * @param null $participantEmail
      * @param bool $attachSupportingDocuments
@@ -272,7 +278,7 @@ class Agreement implements RequestEntityInterface {
      * @return bool|string
      * @throws \RuntimeException
      */
-    public function combinedDocument($agreementId, $versionId=null, $participantEmail=null, $attachSupportingDocuments=false, $auditReport=false)
+    public function combinedDocument($agreementId, $fileName, $versionId=null, $participantEmail=null, $attachSupportingDocuments=false, $auditReport=false)
     {
         $query = [
             'versionId'                 => $versionId,
@@ -283,6 +289,7 @@ class Agreement implements RequestEntityInterface {
 
         $this->endPoint = $agreementId .'/combinedDocument?'.http_build_query($query) ;
 
+        /*
         $savePath = sys_get_temp_dir();
 
         if( ! is_writable( $savePath ) ) {
@@ -290,6 +297,7 @@ class Agreement implements RequestEntityInterface {
         }
 
         $fileName = $savePath . DIRECTORY_SEPARATOR . substr( $agreementId, 0, 16). '.pdf';
+        */
 
         $this->headers = [
             'Access-Token' => $this->token->getAccessToken(),
