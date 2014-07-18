@@ -28,8 +28,10 @@ class LibraryDocumentInfo {
         $this->name              = $response['name'];
         $this->latestVersionId   = $response['latestVersionId'];
 
-        foreach( $response['events'] as $event ) {
-            $this->events[] = new LibDocumentHistoryEvent($event);
+        if( array_key_exists('events', $response) ){
+            foreach( $response['events'] as $event ) {
+                $this->events[] = new LibDocumentHistoryEvent($event);
+            }
         }
 
         if( array_key_exists('securityOptions', $response) ) {

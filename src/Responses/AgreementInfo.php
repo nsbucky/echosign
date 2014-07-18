@@ -40,16 +40,22 @@ class AgreementInfo {
 
         $this->status = new AgreementStatus( $response['status'] );
 
-        foreach( $response['events'] as $event ) {
-            $this->events[] = new DocumentHistoryEvent( $event );
+        if( array_key_exists('events', $response)) {
+            foreach( $response['events'] as $event ) {
+                $this->events[] = new DocumentHistoryEvent( $event );
+            }
         }
 
-        foreach( $response['nextParticipantInfos'] as $npi ) {
-            $this->nextParticipantInfos[] = new NextParticipantInfo( $npi );
+        if( array_key_exists('nextParticipantInfos', $response)) {
+            foreach( $response['nextParticipantInfos'] as $npi ) {
+                $this->nextParticipantInfos[] = new NextParticipantInfo( $npi );
+            }
         }
 
-        foreach( $response['participants'] as $p ) {
-            $this->participants[] = new ParticipantInfo( $p );
+        if( array_key_exists('participants', $response) ) {
+            foreach( $response['participants'] as $p ) {
+                $this->participants[] = new ParticipantInfo( $p );
+            }
         }
 
         $this->agreement = $agreement;
