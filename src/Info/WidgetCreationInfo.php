@@ -1,10 +1,9 @@
 <?php namespace Echosign\Info;
 
 use Echosign\Interfaces\InfoInterface;
-use Echosign\Options\SecurityOption;
-use Echosign\TransientDocument;
+use Echosign\Options\WidgetSecurityOption;
 
-class DocumentCreationInfo implements InfoInterface {
+class WidgetCreationInfo implements InfoInterface {
 
     const SIGN_ESIGN = 'ESIGN';
     const SIGN_WRITTEN = 'WRITTEN';
@@ -32,40 +31,48 @@ class DocumentCreationInfo implements InfoInterface {
 
     protected $formFieldLayerTemplates = [ ];
     protected $securityOptions;
-    protected $recipients = [ ];
     protected $ccs = [ ];
     protected $vaultingInfo;
     protected $mergeFieldInfo = [ ];
     protected $fileInfos = [ ];
+    protected $widgetCompletionInfo;
+    protected $counterSigners = [];
+    protected $widgetAuthFailureInfo;
 
     /**
-     * @param FileInfo $fileInfo
+     * @param WidgetCompletionInfo $widgetCompletionInfo
+     * @param WidgetFileInfo $fileInfo
      * @param $name
-     * @param $signerEmail
      * @param $signatureType
      * @param $signatureFlow
      */
-    public function __construct( FileInfo $fileInfo, $name, $signerEmail, $signatureType, $signatureFlow )
+    public function __construct( WidgetCompletionInfo $widgetCompletionInfo, WidgetFileInfo $fileInfo, $name, $signatureType, $signatureFlow )
     {
+        $this->widgetCompletionInfo = $widgetCompletionInfo;
+
         $this->fileInfos[] = $fileInfo;
 
-        $this->setAgreementName($name);
+        $this->setName($name);
 
         $this->setSignatureType($signatureType);
-
-        $this->addRecipient($signerEmail, null, 'SIGNER');
 
         $this->setSignatureFlow($signatureFlow);
     }
 
     /**
-     * @param $name
-     * @return $this
+     * @param mixed $widgetAuthFailureInfo
      */
-    public function setAgreementName($name)
+    public function setWidgetAuthFailureInfo( WidgetCompletionInfo $widgetAuthFailureInfo )
     {
-        $this->name = filter_var($name, FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW);
-        return $this;
+        $this->widgetAuthFailureInfo = $widgetAuthFailureInfo;
+    }
+
+    /**
+     * @param CounterSignerInfo $counterSigners
+     */
+    public function setCounterSigners( CounterSignerInfo $counterSigners )
+    {
+        $this->counterSigners[] = $counterSigners;
     }
 
     /**
@@ -155,13 +162,11 @@ class DocumentCreationInfo implements InfoInterface {
         return $this;
     }
 
-
-
     /**
-     * @param FileInfo $info
+     * @param WidgetFileInfo $info
      * @return $this
      */
-    public function addFormFieldLayerTemplate( FileInfo $info )
+    public function addFormFieldLayerTemplate( WidgetFileInfo $info )
     {
         $this->formFieldLayerTemplates[] = $info;
 
@@ -169,37 +174,13 @@ class DocumentCreationInfo implements InfoInterface {
     }
 
     /**
-     * @param SecurityOption $option
+     * @param WidgetSecurityOption $option
      * @return $this
      */
-    public function addSecurityOption( SecurityOption $option )
+    public function addSecurityOption( WidgetSecurityOption $option )
     {
         $this->securityOptions = $option;
 
-        return $this;
-    }
-
-    /**
-     * @param RecipientInfo $recipient
-     * @return $this
-     */
-    public function addRecipients( RecipientInfo $recipient )
-    {
-        $this->recipients[] = $recipient;
-
-        return $this;
-    }
-
-    /**
-     * @param null $email
-     * @param null $fax
-     * @param null $role
-     * @return $this
-     */
-    public function addRecipient( $email=null, $fax=null, $role=null )
-    {
-        $info = new RecipientInfo( $email, $fax, $role);
-        $this->recipients[] = $info;
         return $this;
     }
 
@@ -215,10 +196,10 @@ class DocumentCreationInfo implements InfoInterface {
     }
 
     /**
-     * @param MergefieldInfo $info
+     * @param WidgetMergefieldInfo $info
      * @return $this
      */
-    public function addMergeFieldInfo( MergefieldInfo $info )
+    public function addMergeFieldInfo( WidgetMergefieldInfo $info )
     {
         $this->mergeFieldInfo[] = $info;
 
@@ -237,15 +218,13 @@ class DocumentCreationInfo implements InfoInterface {
     }
 
     /**
-     * set this transient document as the one to be signed
-     * @param TransientDocument $document
+     * @param WidgetVaultingInfo $vaultingInfo
      * @return $this
      */
-    public function addTransientDocument( TransientDocument $document )
+    public function addVaultingInfo( WidgetVaultingInfo $vaultingInfo )
     {
-        $info = new FileInfo();
-        $info->transientDocumentId = $document->getDocumentId();
-        $this->fileInfos[] = $info;
+        $this->vaultingInfo = $vaultingInfo;
+
         return $this;
     }
 
@@ -255,6 +234,7 @@ class DocumentCreationInfo implements InfoInterface {
     public function toArray()
     {
         $data = [
+            'widgetCompletionInfo'     => $this->widgetCompletionInfo->toArray(),
             'signatureType'            => $this->signatureType,
             'callbackinfo'             => $this->callbackinfo,
             'daysUntilSigningDeadline' => $this->daysUntilSigningDeadline,
@@ -263,8 +243,19 @@ class DocumentCreationInfo implements InfoInterface {
             'message'                  => $this->message,
             'reminderFrequency'        => $this->reminderFrequency,
             'name'                     => $this->name,
-            'ccs'                      => $this->ccs
+            'ccs'                      => $this->ccs,
         ];
+
+        if( $this->widgetAuthFailureInfo ) {
+            $data['widgetAuthFailureInfo'] = $this->widgetAuthFailureInfo->toArray();
+        }
+
+        if( count( $this->counterSigners ) ) {
+            $data['counterSigners'] = [];
+            foreach( $this->counterSigners as $c ) {
+                $data['counterSigners'][] = $c->toArray();
+            }
+        }
 
         if( count( $this->formFieldLayerTemplates ) ) {
             $data['formFieldLayerTemplates'] = [];
@@ -277,13 +268,6 @@ class DocumentCreationInfo implements InfoInterface {
             $data['fileInfos'] = [];
             foreach( $this->fileInfos as $t ) {
                 $data['fileInfos'][] = $t->toArray();
-            }
-        }
-
-        if( count( $this->recipients ) ) {
-            $data['recipients'] = [];
-            foreach( $this->recipients as $t ) {
-                $data['recipients'][] = $t->toArray();
             }
         }
 
@@ -312,6 +296,5 @@ class DocumentCreationInfo implements InfoInterface {
     {
         return json_encode( $this->toArray() );
     }
-
 
 }

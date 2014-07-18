@@ -260,7 +260,11 @@ class LibraryDocument implements RequestEntityInterface {
      */
     public function getEndPoint()
     {
-        return self::END_POINT . '/ ' . $this->endPoint;
+        if( $this->endPoint ) {
+            return self::END_POINT . '/ ' . $this->endPoint;
+        }
+
+        return self::END_POINT;
     }
 
     /**
