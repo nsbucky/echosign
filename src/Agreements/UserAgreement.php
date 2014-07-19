@@ -6,12 +6,12 @@ use Echosign\Status\UserDocumentStatus;
 
 class UserAgreement {
 
-    public $displayDate;
+    protected $displayDate;
     protected $status;
     protected $displayUserInfo;
     public $agreementId;
     public $esign;
-    public $lastestVersionId;
+    public $latestVersionId;
     protected $agreement;
 
     /**
@@ -26,8 +26,16 @@ class UserAgreement {
         $this->displayUserInfo  = new DisplayUserInfo( \Echosign\array_get( $response['displayUserInfo'], 'company'), \Echosign\array_get($response['displayUserInfo'], 'fullNameOrEmail') );
         $this->agreementId      = $response['agreementId'];
         $this->esign            = (bool) $response['esign'];
-        $this->lastestVersionId = $response['latestVersionId'];
+        $this->latestVersionId  = $response['latestVersionId'];
         $this->agreement        = $agreement;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDisplayDate()
+    {
+        return $this->displayDate;
     }
 
     /**

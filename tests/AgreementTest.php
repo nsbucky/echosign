@@ -114,11 +114,11 @@ class AgreementTest extends PHPUnit_Framework_TestCase {
 
         // first agreement
         $firstAgreement = $agreements[0];
-        $this->assertInstanceOf('DateTime', $firstAgreement->displayDate );
+        $this->assertInstanceOf('DateTime', $firstAgreement->getDisplayDate() );
         $this->assertTrue( $firstAgreement->esign );
         $this->assertEquals("[DEMO USE ONLY] Sign Up Proposal", $firstAgreement->name);
         $this->assertEquals("2AAABLblqZhCU0Zea2YWCvcXJFU6qsNOGG83nofmmdNsjVIfJEJ_mqJArenO9-WtZMxoHbueS9mk*", $firstAgreement->agreementId);
-        $this->assertEquals("2AAABLblqZhBRyo_vwhJWPKtajf1t0onWqB3hYhwMwvS9a4yo5yVevqo2yHrKmg7fo6dkdItE3DA*", $firstAgreement->lastestVersionId);
+        $this->assertEquals("2AAABLblqZhBRyo_vwhJWPKtajf1t0onWqB3hYhwMwvS9a4yo5yVevqo2yHrKmg7fo6dkdItE3DA*", $firstAgreement->latestVersionId);
         $this->assertEquals("OUT_FOR_SIGNATURE", $firstAgreement->getStatus());
         $this->assertEquals("It is another user's turn to sign the document", $firstAgreement->getStatusMessage());
         $this->assertEquals("recipient@gmail.com", $firstAgreement->getUserName());
