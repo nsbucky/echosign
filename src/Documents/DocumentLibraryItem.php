@@ -48,7 +48,7 @@ class DocumentLibraryItem {
 
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getLibraryDocumentId()
     {
