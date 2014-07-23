@@ -155,8 +155,6 @@ class DocumentCreationInfo implements InfoInterface {
         return $this;
     }
 
-
-
     /**
      * @param FileInfo $info
      * @return $this

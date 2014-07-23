@@ -12,7 +12,7 @@ class DocumentHistoryEvent {
     public $comment;
     public $actingUserIpAddress;
     protected $type;
-    public $date;
+    protected $date;
     public $deviceLocation;
     public $actingUserEmail;
 
@@ -41,12 +41,11 @@ class DocumentHistoryEvent {
     }
 
     /**
-     * @return mixed
+     * @return \DateTime
      */
-    public function getComment()
+    public function getDate()
     {
-        if( isset($this->comment) ) return $this->comment;
-        return $this->type->getMessage();
+        return $this->date;
     }
 
     /**

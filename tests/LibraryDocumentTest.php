@@ -122,7 +122,7 @@ class LibraryDocumentTest extends PHPUnit_Framework_TestCase {
         $events = $docInfo->getEvents();
         $this->assertEquals("forms@echosign.com", $events[0]->actingUserEmail);
         $this->assertEquals("192.150.10.206", $events[0]->actingUserIpAddress);
-        $this->assertInstanceOf("DateTime", $events[0]->date);
+        $this->assertInstanceOf("DateTime", $events[0]->getDate());
         $this->assertEquals("forms@echosign.com", $events[0]->participantEmail);
         $this->assertEquals("CREATED", $events[0]->getType()->getType());
         $this->assertEquals("2AAABLblqZhDvRyNu367iWzb3JJyEY1--Rdz2_H6DvHeijcyfMQEitLde70FZ9kIdujFB2lYT1Vw*", $events[0]->versionId);

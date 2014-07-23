@@ -1,6 +1,7 @@
 <?php namespace Echosign\Info;
 
 use Echosign\Interfaces\InfoInterface;
+use Echosign\Options\WidgetSignerSecurityOption;
 
 class CounterSignerInfo implements InfoInterface {
 
@@ -8,14 +9,21 @@ class CounterSignerInfo implements InfoInterface {
     protected $role;
     protected $securityOptions = [];
 
+    public function __construct( $email = null, $role = null, WidgetSignerSecurityOption $securityOptions = null )
+    {
+        $this->email           = $email;
+        $this->role            = $role;
+        $this->securityOptions[] = $securityOptions;
+    }
+
+
     /**
-     * @param mixed $securityOptions
+     * @param WidgetSignerSecurityOption $securityOptions
      */
     public function setSecurityOptions( WidgetSignerSecurityOption $securityOptions )
     {
         $this->securityOptions[] = $securityOptions;
     }
-
 
     /**
      * @param mixed $role

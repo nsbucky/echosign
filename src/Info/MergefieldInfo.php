@@ -7,6 +7,12 @@ class MergefieldInfo implements  InfoInterface {
     public $defaultValue;
     public $fieldName;
 
+    public function __construct( $defaultValue = null, $fieldName = null )
+    {
+        $this->defaultValue = $defaultValue;
+        $this->fieldName    = $fieldName;
+    }
+
     /**
      * @return array
      */

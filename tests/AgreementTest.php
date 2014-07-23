@@ -199,7 +199,7 @@ class AgreementTest extends PHPUnit_Framework_TestCase {
 
         $this->assertEquals("test@test.com", $firstEvent->actingUserEmail);
         $this->assertEquals("192.168.1.1", $firstEvent->actingUserIpAddress);
-        $this->assertInstanceOf('DateTime', $firstEvent->date);
+        $this->assertInstanceOf('DateTime', $firstEvent->getDate());
         $this->assertEquals("Document created by Kenrick Buchanan", $firstEvent->description);
         $this->assertEquals("test@test.com", $firstEvent->participantEmail);
         $this->assertInstanceOf('Echosign\Types\AgreementEventType', $firstEvent->getAgreementEventType());

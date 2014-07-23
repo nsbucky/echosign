@@ -6,8 +6,8 @@ use Echosign\Types\EventType;
 class LibDocumentHistoryEvent {
 
     public $synchronizationKey, $participantEmail, $description,
-           $versionId, $comment, $actingUserIpAddress, $actingUserEmail, $date;
-
+           $versionId, $comment, $actingUserIpAddress, $actingUserEmail;
+    protected $date;
     protected $type;
     protected $deviceLocation;
 
@@ -28,12 +28,23 @@ class LibDocumentHistoryEvent {
             $this->date = \DateTime::createFromFormat(\DateTime::W3C, $config['date']);
         }
 
-        $this->type = new EventType($config['type']);
+        if( array_key_exists('type', $config) ) {
+            $this->type = new EventType($config['type']);
+        }
 
         if( array_key_exists('deviceLocation', $config) ) {
             $this->deviceLocation = new LibDocEventDeviceLocation( $config['deviceLocation']['latitude'], $config['deviceLocation']['longitude']);
         }
     }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDate()
+    {
+        return $this->date;
+    }
+
 
     /**
      * @return EventType
