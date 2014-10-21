@@ -219,7 +219,7 @@ class Widget implements RequestEntityInterface {
     public function getEndPoint()
     {
         if( $this->endPoint ) {
-            return self::END_POINT . '/ ' . $this->endPoint;
+            return self::END_POINT . '/' . $this->endPoint;
         }
 
         return self::END_POINT;
