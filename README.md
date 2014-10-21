@@ -19,13 +19,15 @@ In the `require` key of `composer.json` file add the following
 
     // upload a transient document
     use Echosign\TransientDocument;
-    $document = new TransientDocument($this->token, '/path/to/file/sample.pdf', 'application/pdf');
+    $document = new TransientDocument($token, '/path/to/file/sample.pdf', 'application/pdf');
     $document->send();
 
     // create an agreement
     use Echosign\Agreement;
     use Echosign\Info\DocumentCreationInfo;
     $agreement = new Agreement($token);
-    $docInfo = new DocumentCreationInfo('123456abc', 'test','SIGNER','recipient@gmail.com');
-    $created = $agreement->create( $docInfo );
+    $fileInfos = new FileInfo();
+    $docInfo = new DocumentCreationInfo( $fileInfos, 'test', 'user@gmail.com', \Echosign\Info\DocumentCreationInfo::SIGN_ESIGN, \Echosign\Info\DocumentCreationInfo::FLOW_NOT_REQUIRED );
+    $docInfo->addTransientDocument($document);
+    $response = $agreement->create($docInfo);
 
