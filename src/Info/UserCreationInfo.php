@@ -22,7 +22,7 @@ class UserCreationInfo implements InfoInterface {
      * @param $password
      * @param $groupId
      */
-    public function __construct( $firstName, $lastName, $email, $password, $groupId )
+    public function __construct( $firstName, $lastName, $email, $password, $groupId = null )
     {
         $this->firstName = $firstName;
         $this->lastName  = $lastName;

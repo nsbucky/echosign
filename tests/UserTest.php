@@ -9,7 +9,6 @@ class UserTest extends PHPUnit_Framework_TestCase {
 
     public function __construct()
     {
-        $this->config = require_once __DIR__. '/../echosign-auth.php';
         $this->token = m::mock('Echosign\Token');
         $this->token->shouldReceive('getAccessToken')->andReturn('12345abc');
     }
@@ -48,20 +47,16 @@ class UserTest extends PHPUnit_Framework_TestCase {
 
     public function testCreate()
     {
-        $returnJson = '{
-              "result": "SUCCESS"
-        }';
-
         $transport = m::mock('Echosign\Transports\Guzzle');
-        $transport->shouldReceive('post')->andReturn( json_decode( $returnJson, true) );
+        $transport->shouldReceive('post')->andReturn( [ "userId" => "2AAABLblqZhAKeyuN406fXRj1LowesdnhuXS_c8mxjpby3X9p-NXY_NWXq4RAoMKWqVtElqjA5gk*" ] );
 
         $user = new \Echosign\User($this->token);
         $user->setTransport($transport);
 
-        $userCreationInfo = new \Echosign\Info\UserCreationInfo('jon','stamos','test@test.com','123balls','2AAABLblqZhAxtQfJjDmP2rfRiL_sT83WVNLSS_ZrcOw6UQNbfYYZn9HSluHuA1x63UT41eFNAYI*');
+        $userCreationInfo = new \Echosign\Info\UserCreationInfo('jon','stamos','test@test.com','123balls');
 
         $created = $user->create($userCreationInfo);
 
-        $this->assertTrue( $created );
+        $this->assertInstanceOf('Echosign\Responses\UserCreationResponse', $created );
     }
 }
