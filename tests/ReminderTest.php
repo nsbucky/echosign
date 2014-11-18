@@ -9,7 +9,6 @@ class ReminderTest extends PHPUnit_Framework_TestCase {
 
     public function __construct()
     {
-        $this->config = require_once __DIR__. '/../echosign-auth.php';
         $this->token = m::mock('Echosign\Token');
         $this->token->shouldReceive('getAccessToken')->andReturn('12345abc');
     }

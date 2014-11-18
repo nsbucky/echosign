@@ -8,6 +8,7 @@ class TokenTest extends PHPUnit_Framework_TestCase {
 
     public function __construct()
     {
+        // this file is only use by Token. Please look at bootstrap.php for a sample. This should be mocked instead sorry.
         $this->config = require_once __DIR__. '/../echosign-auth.php';
     }
 

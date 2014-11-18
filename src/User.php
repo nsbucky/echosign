@@ -3,6 +3,7 @@
 use Echosign\Info\UserCreationInfo;
 use Echosign\Interfaces\RequestEntityInterface;
 use Echosign\Interfaces\TransportInterface;
+use Echosign\Responses\UserCreationResponse;
 use Echosign\Responses\UsersInfo;
 use Echosign\Transports\Guzzle;
 use Echosign\Responses\Error;
@@ -54,7 +55,7 @@ class User implements RequestEntityInterface {
             return $response;
         }
 
-        return true;
+        return new UserCreationResponse( $response );
     }
 
     /**
