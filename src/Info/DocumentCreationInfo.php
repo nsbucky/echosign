@@ -11,6 +11,8 @@ class DocumentCreationInfo implements InfoInterface {
     const FLOW_NOT_REQUIRED = 'SENDER_SIGNATURE_NOT_REQUIRED';
     const FLOW_SIGNS_LAST = 'SENDER_SIGNS_LAST';
     const FLOW_SIGNS_FIRST = 'SENDER_SIGNS_FIRST';
+    const SEQUENTIAL = 'SEQUENTIAL';
+    const PARALLEL = 'PARALLEL';
 
     /**
      * ['ESIGN' or 'WRITTEN']:
@@ -144,7 +146,7 @@ class DocumentCreationInfo implements InfoInterface {
      */
     public function setSignatureFlow( $signatureFlow )
     {
-        $allowed = ['SENDER_SIGNATURE_NOT_REQUIRED', 'SENDER_SIGNS_LAST', 'SENDER_SIGNS_FIRST'];
+        $allowed = ['SENDER_SIGNATURE_NOT_REQUIRED', 'SENDER_SIGNS_LAST', 'SENDER_SIGNS_FIRST', 'SEQUENTIAL', 'PARALLEL'];
         if( ! in_array($signatureFlow, $allowed)) {
             throw new \InvalidArgumentException('Invalid signature flow provided. Must be one of: ' . implode(', ', $allowed) );
 
