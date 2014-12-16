@@ -43,11 +43,11 @@ class DocumentCreationInfo implements InfoInterface {
     /**
      * @param FileInfo $fileInfo
      * @param $name
-     * @param $signerEmail
      * @param $signatureType
      * @param $signatureFlow
+     * @internal param $signerEmail
      */
-    public function __construct( FileInfo $fileInfo, $name, $signerEmail, $signatureType, $signatureFlow )
+    public function __construct( FileInfo $fileInfo, $name, $signatureType, $signatureFlow )
     {
         $this->fileInfos[] = $fileInfo;
 
@@ -55,7 +55,7 @@ class DocumentCreationInfo implements InfoInterface {
 
         $this->setSignatureType($signatureType);
 
-        $this->addRecipient($signerEmail, null, 'SIGNER');
+        //$this->addRecipient($signerEmail, null, 'SIGNER');
 
         $this->setSignatureFlow($signatureFlow);
     }

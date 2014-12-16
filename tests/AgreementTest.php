@@ -31,7 +31,7 @@ class AgreementTest extends PHPUnit_Framework_TestCase {
 
         $fileInfos = new \Echosign\Info\FileInfo();
         $fileInfos->setDocumentURL('test.pdf','http://www.yahoo.com','application/pdf');
-        $docInfo = new \Echosign\Info\DocumentCreationInfo( $fileInfos, 'test', 'recipient@gmail.com', \Echosign\Info\DocumentCreationInfo::SIGN_ESIGN, \Echosign\Info\DocumentCreationInfo::FLOW_NOT_REQUIRED );
+        $docInfo = new \Echosign\Info\DocumentCreationInfo( $fileInfos, 'test', \Echosign\Info\DocumentCreationInfo::SIGN_ESIGN, \Echosign\Info\DocumentCreationInfo::FLOW_NOT_REQUIRED );
         $interActiveOptions = new Echosign\Options\InteractiveOptions();
         /**
          * if this is not set to true YOU WILL NOT GET BACK A SIGNING URL OR EMBEDDED CODE. OMFG.

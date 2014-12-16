@@ -21,7 +21,7 @@ class DocumentCreationInfoTest extends PHPUnit_Framework_TestCase {
         $r = new RecipientInfo('test@test.com');
         $m = new \Echosign\Info\MergefieldInfo(1, 'first_name');
 
-        $doc = new DocumentCreationInfo( $file, 'joe', 'test@test.com', 'ESIGN', 'SENDER_SIGNATURE_NOT_REQUIRED');
+        $doc = new DocumentCreationInfo( $file, 'joe', 'ESIGN', 'SENDER_SIGNATURE_NOT_REQUIRED' );
 
         $doc->setMessage('message');
         $doc->setLocale('EN_US');
@@ -49,7 +49,7 @@ class DocumentCreationInfoTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('cc@test.com', $a['ccs'][0]);
         $this->assertEquals(1, count($a['ccs']));
 
-        $this->assertEquals(3, count($a['recipients']));
+        $this->assertEquals(2, count($a['recipients']));
         $this->assertEquals('test@test.com', $a['recipients'][0]['email']);
 
         $this->assertTrue( $a['securityOptions']['passwordProtection']);
