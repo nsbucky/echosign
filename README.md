@@ -27,7 +27,8 @@ In the `require` key of `composer.json` file add the following
     use Echosign\Info\DocumentCreationInfo;
     $agreement = new Agreement($token);
     $fileInfos = new FileInfo();
-    $docInfo = new DocumentCreationInfo( $fileInfos, 'test', 'user@gmail.com', \Echosign\Info\DocumentCreationInfo::SIGN_ESIGN, \Echosign\Info\DocumentCreationInfo::FLOW_NOT_REQUIRED );
+    $docInfo = new DocumentCreationInfo( $fileInfos, 'test', \Echosign\Info\DocumentCreationInfo::SIGN_ESIGN, \Echosign\Info\DocumentCreationInfo::FLOW_NOT_REQUIRED );
+    $docinfo->addRecipient('user@gmail.com');
     $docInfo->addTransientDocument($document);
     $response = $agreement->create($docInfo);
 
