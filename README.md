@@ -1,6 +1,9 @@
 # Echosign
 Library for dealing with adobe echosign REST API v2. You can view the API docs here: https://secure.echosign.com/public/docs/restapi/v2
 
+## Api v3
+This library will not support the new v3 of Echosign. Please take a look at nsbucky/echosignv3 for work in progress.
+
 ## Requirements
 PHP 5.4, php ext-filter. Uses guzzlehttp as a transport, though you can plug in other ones if you want.
 
